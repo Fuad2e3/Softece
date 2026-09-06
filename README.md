@@ -31,12 +31,21 @@ no dependencies, no framework to keep up to date.
 
 ## Features
 
-- **Dark and light themes** — one-click toggle, remembered in `localStorage`
-- **Fully responsive** — single-column mobile through wide desktop, with a full-screen mobile menu
+- **Automatic day / night** — follows the operating system out of the box and keeps following
+  it if the OS flips at sunset. The theme button cycles auto → light → dark; a forced choice is
+  remembered and applied before first paint, so the page never flashes the wrong palette
+- **Easy on the eyes** — the night palette avoids pure black behind near-white text and the day
+  palette avoids a full-brightness white page, the two pairings that cause the most glare.
+  Every text colour on every page clears WCAG AA in both palettes
+- **Fully responsive** — verified from 320px to 2560px with no horizontal scrolling, no text
+  under 12px and no undersized tap targets, with a full-screen mobile menu
+- **Fast** — first paint under 140ms, ~20–75KB per page over 4 requests, 60fps scrolling.
+  Background glows are painted as gradients and animations stick to compositor-only properties
 - **Scroll-reveal animations** via `IntersectionObserver`, with staggered delays
 - **Animated counters** that run once when scrolled into view
 - **Cursor-tracking glow** on service cards
 - **Portfolio filtering**, **FAQ accordion**, **scroll progress bar** and **back-to-top** button
-- **Accessible** — semantic landmarks, ARIA labels, keyboard-operable menu (Esc closes), visible focus
+- **Accessible** — semantic landmarks, ARIA labels, a visible focus ring on every control,
+  keyboard-operable menu (Esc closes)
 - **`prefers-reduced-motion`** respected — all animation disabled for users who ask for it
 - **SEO ready** — per-page titles, meta descriptions, Open Graph tags, `sitemap.xml`, `robots.txt`

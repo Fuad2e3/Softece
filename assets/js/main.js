@@ -4,24 +4,72 @@
 (function () {
   'use strict';
 
-  /* ---------- Theme ---------- */
+  /* ---------- Theme ----------
+     Three states, cycled by the button: auto -> light -> dark -> auto.
+     'auto' removes the attribute so the CSS media query follows the operating
+     system, and keeps following it if the OS flips at sunset. A forced choice
+     is stored and wins until the visitor cycles back to auto.
+     The pre-paint script in each page's <head> applies a forced choice early;
+     this file owns everything after that. */
   var root = document.documentElement;
-  var saved = null;
-  try { saved = localStorage.getItem('softece-theme'); } catch (e) {}
-  if (saved) root.setAttribute('data-theme', saved);
+  var THEMES = ['auto', 'light', 'dark'];
+  var mqDark = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var pref = 'auto';
+  try {
+    var stored = localStorage.getItem('softece-theme');
+    if (THEMES.indexOf(stored) > -1) pref = stored;
+  } catch (e) {}
 
-  function toggleTheme() {
-    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('softece-theme', next); } catch (e) {}
+  function resolved() {
+    if (pref !== 'auto') return pref;
+    return mqDark && mqDark.matches ? 'dark' : 'light';
+  }
+
+  function paintThemeButtons() {
+    var label = pref === 'auto'
+      ? 'Theme: auto (following your system, currently ' + resolved() + ')'
+      : 'Theme: ' + pref;
+    document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+      btn.setAttribute('aria-label', label);
+      btn.setAttribute('title', label);
+    });
+    // Keep the mobile browser chrome in step. On auto each meta stays scoped to
+    // its own media query; a forced choice switches the matching one on and the
+    // other off, since the browser uses the first meta whose media matches.
+    document.querySelectorAll('meta[name="theme-color"][data-scheme]').forEach(function (m) {
+      var scheme = m.getAttribute('data-scheme');
+      m.setAttribute('media', pref === 'auto'
+        ? '(prefers-color-scheme: ' + scheme + ')'
+        : (scheme === pref ? 'all' : 'not all'));
+    });
+  }
+
+  function applyTheme() {
+    if (pref === 'auto') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', pref);
+    paintThemeButtons();
+  }
+
+  function cycleTheme() {
+    pref = THEMES[(THEMES.indexOf(pref) + 1) % THEMES.length];
+    try { localStorage.setItem('softece-theme', pref); } catch (e) {}
+    applyTheme();
+  }
+
+  // While on auto, follow the system if it changes mid-visit.
+  if (mqDark) {
+    var onSystemChange = function () { if (pref === 'auto') paintThemeButtons(); };
+    if (mqDark.addEventListener) mqDark.addEventListener('change', onSystemChange);
+    else if (mqDark.addListener) mqDark.addListener(onSystemChange);
   }
 
   /* ---------- Ready ---------- */
   document.addEventListener('DOMContentLoaded', function () {
 
     /* Theme buttons */
+    applyTheme();
     document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
-      btn.addEventListener('click', toggleTheme);
+      btn.addEventListener('click', cycleTheme);
     });
 
     /* Sticky nav */
