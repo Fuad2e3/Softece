@@ -8,10 +8,13 @@
 <meta name="theme-color" data-scheme="light" content="#f1f3f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" data-scheme="dark" content="#0b0e1a" media="(prefers-color-scheme: dark)">
 <script>
-/* Apply a forced theme before first paint so the page never flashes the
-   wrong palette. No stored choice means auto: the CSS follows the OS. */
-(function(){try{var t=localStorage.getItem("softece-theme");
-if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+/* Runs before first paint. Marks the document as scripted, so the
+   scroll-reveal styles only hide content when something can reveal it again,
+   and applies a forced theme so the page never flashes the wrong palette.
+   No stored choice means auto: the CSS follows the OS. */
+(function(){var d=document.documentElement;d.className+=" js";
+try{var t=localStorage.getItem("softece-theme");
+if(t==="light"||t==="dark")d.setAttribute("data-theme",t);}catch(e){}})();
 </script>
 <meta property="og:title" content="About — Softece">
 <meta property="og:description" content="Softece is a 38-person product studio in Dhaka building software that survives its own growth curve. Meet the team and how we work.">
@@ -204,10 +207,10 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
   <section class="section section--tight">
     <div class="container">
       <div class="stats" data-reveal>
-        <div class="stat"><b data-count="38">0</b><span>Team members</span></div>
-        <div class="stat"><b data-count="120" data-suffix="+">0</b><span>Products delivered</span></div>
-        <div class="stat"><b data-count="14" data-suffix="+">0</b><span>Countries served</span></div>
-        <div class="stat"><b data-count="87" data-suffix="%">0</b><span>Clients who come back</span></div>
+        <div class="stat"><b data-count="38">38</b><span>Team members</span></div>
+        <div class="stat"><b data-count="120" data-suffix="+">120+</b><span>Products delivered</span></div>
+        <div class="stat"><b data-count="14" data-suffix="+">14+</b><span>Countries served</span></div>
+        <div class="stat"><b data-count="87" data-suffix="%">87%</b><span>Clients who come back</span></div>
       </div>
     </div>
   </section>
@@ -247,7 +250,7 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
       </div>
 
       <div>
-        <h4>Services</h4>
+        <h2>Services</h2>
         <ul>
           <li><a href="services.html#app">App Development</a></li>
           <li><a href="services.html#cross">Cross-Platform</a></li>
@@ -260,7 +263,7 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
       </div>
 
       <div>
-        <h4>Company</h4>
+        <h2>Company</h2>
         <ul>
           <li><a href="about.html">About us</a></li>
           <li><a href="portfolio.html">Our work</a></li>
@@ -271,7 +274,7 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
       </div>
 
       <div>
-        <h4>Get in touch</h4>
+        <h2>Get in touch</h2>
         <ul>
           <li><a href="mailto:hello@softece.dev">hello@softece.dev</a></li>
           <li><a href="tel:+8801000000000">+880 10 0000 0000</a></li>

@@ -47,5 +47,10 @@ no dependencies, no framework to keep up to date.
 - **Portfolio filtering**, **FAQ accordion**, **scroll progress bar** and **back-to-top** button
 - **Accessible** — semantic landmarks, ARIA labels, a visible focus ring on every control,
   keyboard-operable menu (Esc closes)
-- **`prefers-reduced-motion`** respected — all animation disabled for users who ask for it
+- **Works without JavaScript** — the page renders complete with scripting off or failed;
+  reveals and counter animations are enhancements layered on top, never a prerequisite
+- **`prefers-reduced-motion`** respected — all motion dropped and every section shown up
+  front, rather than gated behind a scroll reveal
+- **Prints properly** — a white, ink-friendly page with decorative layers removed and link
+  destinations spelled out
 - **SEO ready** — per-page titles, meta descriptions, Open Graph tags, `sitemap.xml`, `robots.txt`

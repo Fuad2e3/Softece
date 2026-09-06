@@ -8,10 +8,13 @@
 <meta name="theme-color" data-scheme="light" content="#f1f3f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" data-scheme="dark" content="#0b0e1a" media="(prefers-color-scheme: dark)">
 <script>
-/* Apply a forced theme before first paint so the page never flashes the
-   wrong palette. No stored choice means auto: the CSS follows the OS. */
-(function(){try{var t=localStorage.getItem("softece-theme");
-if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+/* Runs before first paint. Marks the document as scripted, so the
+   scroll-reveal styles only hide content when something can reveal it again,
+   and applies a forced theme so the page never flashes the wrong palette.
+   No stored choice means auto: the CSS follows the OS. */
+(function(){var d=document.documentElement;d.className+=" js";
+try{var t=localStorage.getItem("softece-theme");
+if(t==="light"||t==="dark")d.setAttribute("data-theme",t);}catch(e){}})();
 </script>
 <meta property="og:title" content="Softece — Software Company | Apps, Web, Servers, Databases & APIs">
 <meta property="og:description" content="Softece is a full-stack software company building mobile apps, cross-platform products, web platforms, servers, databases, APIs and load-balanced infrastructure.">
@@ -130,9 +133,9 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
           <a class="btn btn--ghost btn--lg" href="services.html">Explore services</a>
         </div>
         <div class="hero__meta" data-reveal data-reveal-delay="320">
-          <div><strong data-count="120" data-suffix="+">0</strong><span>Projects delivered</span></div>
-          <div><strong data-count="99.9" data-suffix="%">0</strong><span>Uptime maintained</span></div>
-          <div><strong data-count="14" data-suffix="+">0</strong><span>Countries served</span></div>
+          <div><strong data-count="120" data-suffix="+">120+</strong><span>Projects delivered</span></div>
+          <div><strong data-count="99.9" data-suffix="%">99.9%</strong><span>Uptime maintained</span></div>
+          <div><strong data-count="14" data-suffix="+">14+</strong><span>Countries served</span></div>
         </div>
       </div>
 
@@ -246,10 +249,10 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
   <section class="section section--tight">
     <div class="container">
       <div class="stats" data-reveal>
-        <div class="stat"><b data-count="120" data-suffix="+">0</b><span>Products shipped</span></div>
-        <div class="stat"><b data-count="38" data-suffix="">0</b><span>Engineers &amp; designers</span></div>
-        <div class="stat"><b data-count="9" data-suffix=" yrs">0</b><span>Building together</span></div>
-        <div class="stat"><b data-count="4.9" data-suffix="/5">0</b><span>Client rating</span></div>
+        <div class="stat"><b data-count="120" data-suffix="+">120+</b><span>Products shipped</span></div>
+        <div class="stat"><b data-count="38" data-suffix="">38</b><span>Engineers &amp; designers</span></div>
+        <div class="stat"><b data-count="9" data-suffix=" yrs">9 yrs</b><span>Building together</span></div>
+        <div class="stat"><b data-count="4.9" data-suffix="/5">4.9/5</b><span>Client rating</span></div>
       </div>
     </div>
   </section>
@@ -289,10 +292,10 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
         <p>You always know what is being built this week, what it costs, and when it lands.</p>
       </div>
       <div class="steps">
-        <div class="step" data-reveal><div class="step__n">1</div><h4>Discover</h4><p>We map users, constraints and budget, then write down what success means — before touching a keyboard.</p></div>
-        <div class="step" data-reveal data-reveal-delay="80"><div class="step__n">2</div><h4>Design</h4><p>Wireframes, UI kit and an architecture diagram. You approve the look and the plumbing together.</p></div>
-        <div class="step" data-reveal data-reveal-delay="160"><div class="step__n">3</div><h4>Build</h4><p>Two-week sprints, live staging link, weekly demo. Automated tests and CI from the first sprint.</p></div>
-        <div class="step" data-reveal data-reveal-delay="240"><div class="step__n">4</div><h4>Scale</h4><p>Launch, monitor, tune. Load balancers, caching and index work as your traffic actually grows.</p></div>
+        <div class="step" data-reveal><div class="step__n">1</div><h3>Discover</h3><p>We map users, constraints and budget, then write down what success means — before touching a keyboard.</p></div>
+        <div class="step" data-reveal data-reveal-delay="80"><div class="step__n">2</div><h3>Design</h3><p>Wireframes, UI kit and an architecture diagram. You approve the look and the plumbing together.</p></div>
+        <div class="step" data-reveal data-reveal-delay="160"><div class="step__n">3</div><h3>Build</h3><p>Two-week sprints, live staging link, weekly demo. Automated tests and CI from the first sprint.</p></div>
+        <div class="step" data-reveal data-reveal-delay="240"><div class="step__n">4</div><h3>Scale</h3><p>Launch, monitor, tune. Load balancers, caching and index work as your traffic actually grows.</p></div>
       </div>
     </div>
   </section>
@@ -361,7 +364,7 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
       </div>
 
       <div>
-        <h4>Services</h4>
+        <h2>Services</h2>
         <ul>
           <li><a href="services.html#app">App Development</a></li>
           <li><a href="services.html#cross">Cross-Platform</a></li>
@@ -374,7 +377,7 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
       </div>
 
       <div>
-        <h4>Company</h4>
+        <h2>Company</h2>
         <ul>
           <li><a href="about.html">About us</a></li>
           <li><a href="portfolio.html">Our work</a></li>
@@ -385,7 +388,7 @@ if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)
       </div>
 
       <div>
-        <h4>Get in touch</h4>
+        <h2>Get in touch</h2>
         <ul>
           <li><a href="mailto:hello@softece.dev">hello@softece.dev</a></li>
           <li><a href="tel:+8801000000000">+880 10 0000 0000</a></li>

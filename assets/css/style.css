@@ -32,6 +32,8 @@
   --accent-text:   #22d3ee;
   --ok-text:       #3ddc6a;
   --focus-ring:    #4cc9f0;
+  --bg-nav:        rgba(11, 14, 26, .78);
+  --bg-veil:       rgba(11, 14, 26, .93);
 
   --brand:         #7c5cff;
   --brand-2:       #22d3ee;
@@ -81,6 +83,10 @@
     --accent-text:   #0b6b83;
     --ok-text:       #15803d;
     --focus-ring:    #5b3fd6;
+  --bg-nav:        rgba(241, 243, 247, .80);
+  --bg-veil:       rgba(241, 243, 247, .94);
+    --bg-nav:        rgba(241, 243, 247, .80);
+    --bg-veil:       rgba(241, 243, 247, .94);
 
     --shadow:        0 18px 45px -22px rgba(20, 25, 60, .30);
     --glow:          0 0 0 1px rgba(124,92,255,.15), 0 18px 45px -20px rgba(124,92,255,.30);
@@ -110,6 +116,8 @@
   --accent-text:   #0b6b83;
   --ok-text:       #15803d;
   --focus-ring:    #5b3fd6;
+  --bg-nav:        rgba(241, 243, 247, .80);
+  --bg-veil:       rgba(241, 243, 247, .94);
 
   --shadow:        0 18px 45px -22px rgba(20, 25, 60, .30);
   --glow:          0 0 0 1px rgba(124,92,255,.15), 0 18px 45px -20px rgba(124,92,255,.30);
@@ -195,7 +203,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-bottom: 1px solid transparent;
 }
 .nav.is-stuck {
-  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  background: var(--bg-nav);
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   border-bottom-color: var(--border);
@@ -251,7 +259,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* Mobile drawer */
 .drawer {
   position: fixed; inset: 0; z-index: 99; display: grid; place-items: center;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  background: var(--bg-veil);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   opacity: 0; visibility: hidden; transition: opacity .3s var(--ease), visibility .3s;
 }
@@ -333,11 +341,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* code card */
 .codecard {
   border-radius: var(--radius-lg); border: 1px solid var(--border);
-  background: linear-gradient(160deg, var(--surface-2), var(--surface));
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   box-shadow: var(--shadow); overflow: hidden; position: relative;
-  animation: rise 1s var(--ease) both .25s;
 }
+/* Entrance only when scripting is on, for the same reason as [data-reveal]:
+   an element hidden at opacity 0 until an animation reveals it is invisible
+   forever if that animation never runs. */
+.js .codecard { animation: rise 1s var(--ease) both .25s; }
 @keyframes rise { from { opacity: 0; transform: translateY(28px); } }
 .codecard::before {
   content:""; position:absolute; inset:-1px; border-radius: inherit; padding:1px;
@@ -430,7 +439,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-family: var(--font-display); font-weight: 700; background: var(--accent-grad); color: #fff;
   box-shadow: 0 10px 24px -10px rgba(124,92,255,.9);
 }
-.step h4 { font-size: 1.06rem; margin-bottom: .4em; }
+.step h3 { font-size: 1.06rem; margin-bottom: .4em; }
 .step p { font-size: .9rem; color: var(--text-muted); margin: 0; }
 @media (min-width: 900px) {
   .step:not(:last-child)::after {
@@ -588,7 +597,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer__grid { display: grid; gap: 40px; margin-bottom: 48px; }
 @media (min-width: 780px) { .footer__grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; } }
 .footer__about p { color: var(--text-muted); font-size: .92rem; max-width: 320px; margin: 18px 0 22px; }
-.footer h4 { font-size: .82rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 18px; }
+.footer h2 { font-size: .82rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 18px; }
 .footer li { margin-bottom: 11px; }
 .footer li a { font-size: .92rem; color: var(--text-muted); transition: color .25s, padding-left .25s; }
 .footer li a:hover { color: var(--text); padding-left: 5px; }
@@ -611,9 +620,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 .field textarea:focus-visible,
 .field select:focus-visible { outline: none; }
 
-/* ---------- Reveal ---------- */
-[data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .75s var(--ease), transform .75s var(--ease); }
-[data-reveal].is-in { opacity: 1; transform: none; }
+/* ---------- Reveal ----------
+   Scoped to .js, which the pre-paint script in each head sets. Unscoped, a
+   visitor without JavaScript — or one whose JS simply failed to run — got a
+   page holding nothing but the navbar, because nothing ever added .is-in. */
+.js [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .75s var(--ease), transform .75s var(--ease); }
+.js [data-reveal].is-in { opacity: 1; transform: none; }
 
 /* ---------- Scroll progress ---------- */
 .progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 200; background: var(--accent-grad); transition: width .1s linear; }
@@ -631,12 +643,66 @@ ul { margin: 0; padding: 0; list-style: none; }
 .totop svg { width: 19px; height: 19px; }
 
 /* ---------- Misc ---------- */
+/* Names a section for assistive tech and keeps the heading outline intact
+   without adding anything visible. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 .text-muted { color: var(--text-muted); }
 .mt-0 { margin-top: 0; } .mb-0 { margin-bottom: 0; }
 .center { text-align: center; }
 
+/* ---------- Print ----------
+   A services site gets printed and PDF'd. Without this it came out as a dark
+   page with decorative layers, and anything not yet scroll-revealed missing. */
+@media print {
+  .bg-fx, .progress, .totop, .drawer, .marquee, .nav__actions, .cta__btns, .filters { display: none !important; }
+  .nav { position: static; border-bottom: 1px solid #ccc; }
+  .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .js .codecard { animation: none !important; }
+  :root, :root[data-theme="dark"], :root[data-theme="light"] {
+    --bg: #fff; --bg-soft: #fff;
+    --surface: #fff; --surface-2: #fff;
+    --border: #ccc; --border-strong: #999;
+    --text: #000; --text-muted: #333; --text-dim: #444;
+    --shadow: none; --glow: none;
+  }
+  body { background: #fff !important; color: #000 !important; }
+  .card, .step, .quote, .price, .work, .member, .panel, .contact-item, .acc, .stats, .cta {
+    box-shadow: none !important; background: #fff !important;
+    border: 1px solid #ccc !important; break-inside: avoid;
+  }
+  .section { padding: 24px 0 !important; }
+  .hero { padding-top: 24px !important; }
+  /* Spell out where a link actually goes, since a printed page can't be clicked. */
+  main a[href^="http"]::after, main a[href^="mailto"]::after { content: " (" attr(href) ")"; font-size: .8em; color: #555; }
+  .acc__a { grid-template-rows: 1fr !important; }
+  .grad, .grad-2, .eyebrow, .stat b { -webkit-text-fill-color: #000; color: #000 !important; background: none !important; }
+  /* Printers drop backgrounds by default, which would leave the white label on
+     a gradient button invisible. Print them as outlined text instead. */
+  .btn, .btn--primary, .price__badge, .step__n, .avatar, .logo__mark {
+    background: none !important; color: #000 !important; border: 1px solid #666 !important;
+    box-shadow: none !important; -webkit-text-fill-color: #000;
+  }
+  .logo__mark svg { stroke: #000 !important; }
+  .card__icon, .panel__row i, .contact-item i { background: none !important; color: #000 !important; }
+  .codecard { background: #fff !important; color: #000 !important; border: 1px solid #ccc !important; }
+  .codecard__bar i { background: #999 !important; }
+  .codecard__bar span, .codecard__foot, .codecard .c-com { color: #555 !important; }
+  .codecard .c-key, .codecard .c-str, .codecard .c-fn, .codecard .c-num { color: #000 !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Show everything up front rather than gating it behind a scroll reveal. */
+  .js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .js .codecard { animation: none !important; }
 }
 
 /* ---------- Nav hire button ---------- */

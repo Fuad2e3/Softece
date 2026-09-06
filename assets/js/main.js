@@ -150,14 +150,17 @@
         entries.forEach(function (en) {
           if (!en.isIntersecting) return;
           var el = en.target;
-          var target = parseFloat(el.getAttribute('data-count'));
+          var raw = el.getAttribute('data-count');
+          var target = parseFloat(raw);
           var suffix = el.getAttribute('data-suffix') || '';
+          // Match the precision written in the markup. Rounding everything
+          // fractional to one decimal turned 99.98% into 100.0%.
+          var decimals = raw.indexOf('.') > -1 ? raw.split('.')[1].length : 0;
           var dur = 1500, t0 = performance.now();
           function tick(now) {
             var p = Math.min((now - t0) / dur, 1);
             var eased = 1 - Math.pow(1 - p, 3);
-            var val = target * eased;
-            el.textContent = (target % 1 !== 0 ? val.toFixed(1) : Math.round(val)) + suffix;
+            el.textContent = (target * eased).toFixed(decimals) + suffix;
             if (p < 1) requestAnimationFrame(tick);
           }
           requestAnimationFrame(tick);
