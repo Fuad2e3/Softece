@@ -331,11 +331,18 @@
       }
     }
 
-    /* Active nav link */
-    var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    /* Active nav link. Home is linked as "./" so the address bar stays on the
+       directory rather than spelling out index.html, so both forms have to
+       resolve to the same name before they are compared. */
+    var pageName = function (path) {
+      var last = path.split('?')[0].split('#')[0].split('/').pop() || '';
+      return (last === '' || last === '.') ? 'index.html' : last.toLowerCase();
+    };
+    var here = pageName(location.pathname);
     document.querySelectorAll('.nav__link, .drawer a').forEach(function (a) {
-      var href = (a.getAttribute('href') || '').split('/').pop().split('#')[0].toLowerCase();
-      if (href && href === here) a.classList.add('is-active');
+      var href = a.getAttribute('href') || '';
+      if (!href || href.charAt(0) === '#') return;
+      if (pageName(href) === here) a.classList.add('is-active');
     });
 
     /* Footer year */
