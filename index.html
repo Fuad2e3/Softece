@@ -1220,10 +1220,10 @@ if(t==="light"||t==="dark")d.setAttribute("data-theme",t);}catch(e){}})();
               <p class="field__hint">Set by the card you clicked. <a href="#pricing">Pick a different package</a></p>
             </div>
 
-            <div class="field" id="order-price-field" hidden>
-              <label for="order-price">Your price (BDT)</label>
-              <input id="order-price" name="price" type="text" placeholder="What is this worth to you? Leave blank for a quote">
-              <p class="field__hint">Enterprise is priced per project &mdash; name a figure and we will tell you what fits inside it.</p>
+            <div class="field" id="order-price-field">
+              <label for="order-price">Price (BDT)</label>
+              <input id="order-price" name="price" type="text" value="৳3,000" readonly>
+              <p class="field__hint" id="order-price-hint">Fixed for Launch (৳3,000 / project). <a href="#pricing">Pick a different package</a></p>
             </div>
 
             <div class="form__row">
@@ -1359,6 +1359,6 @@ if(t==="light"||t==="dark")d.setAttribute("data-theme",t);}catch(e){}})();
 
 <button class="totop" aria-label="Back to top"><svg><use href="#i-up"/></svg></button>
 
-<script src="assets/js/main.js?v=9" defer></script>
+<script src="assets/js/main.js?v=10" defer></script>
 </body>
 </html>

@@ -239,14 +239,38 @@
          written once, in the markup. Enterprise has no fixed price, so it is
          the one package that asks the visitor for a figure. */
       if (planField && form.elements[planField]) {
-        routeHooks.push(function (route, plan) {
-          if (route !== 'order') return;
+        var updatePlanAndPrice = function (plan) {
           var label = plan && form.getAttribute('data-plan-' + plan.toLowerCase());
           if (label) form.elements[planField].value = label;
+          var pkgVal = (form.elements[planField].value || '').toLowerCase();
+          var priceInput = form.elements['price'];
+          var priceHint = document.getElementById('order-price-hint');
           var priceField = document.getElementById('order-price-field');
-          if (priceField) {
-            priceField.hidden = form.elements[planField].value.toLowerCase().indexOf('enterprise') !== 0;
+
+          if (priceInput) {
+            if (pkgVal.indexOf('growth') !== -1) {
+              priceInput.value = '৳9,500';
+              priceInput.readOnly = true;
+              if (priceHint) priceHint.innerHTML = 'Fixed for Growth (৳9,500 / project). <a href="#pricing">Pick a different package</a>';
+            } else if (pkgVal.indexOf('enterprise') !== -1) {
+              if (priceInput.value === '৳3,000' || priceInput.value === '৳9,500') {
+                priceInput.value = '';
+              }
+              priceInput.readOnly = false;
+              priceInput.placeholder = 'What is this worth to you? Leave blank for a quote';
+              if (priceHint) priceHint.innerHTML = 'Enterprise is priced per project &mdash; name a figure or leave blank for a quote.';
+            } else {
+              priceInput.value = '৳3,000';
+              priceInput.readOnly = true;
+              if (priceHint) priceHint.innerHTML = 'Fixed for Launch (৳3,000 / project). <a href="#pricing">Pick a different package</a>';
+            }
+            if (priceField) priceField.hidden = false;
           }
+        };
+
+        routeHooks.push(function (route, plan) {
+          if (route !== 'order') return;
+          updatePlanAndPrice(plan || 'launch');
         });
       }
 
@@ -257,6 +281,17 @@
             data[el.name] = (el.value || '').trim();
           }
         });
+        // Ensure price is always filled in for the Google Sheet
+        if (!data.price || data.price === '') {
+          var pkg = (data.package || '').toLowerCase();
+          if (pkg.indexOf('growth') !== -1) {
+            data.price = '৳9,500';
+          } else if (pkg.indexOf('enterprise') !== -1) {
+            data.price = 'Custom Quote';
+          } else {
+            data.price = '৳3,000';
+          }
+        }
         return data;
       };
       var busy = function (on) {
