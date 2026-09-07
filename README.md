@@ -53,7 +53,7 @@ appends a row:
 2. **Extensions → Apps Script**, paste [`tools/sheet-endpoint.gs`](tools/sheet-endpoint.gs).
 3. **Deploy → New deployment → Web app**, with *Execute as: Me* and
    *Who has access: Anyone*. Authorise, then copy the `/exec` URL.
-4. Paste that URL into `data-sheet` on the form in `order/index.html`.
+4. Paste that URL into `data-sheet` on the order form in `index.html`.
 
 Columns: `Received`, `Package`, `Price`, `Name`, `Email`, `Phone`, `Company`, `Start`, `Details`.
 `Price` is only filled for Enterprise, which is the one package without a set price.
