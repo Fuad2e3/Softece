@@ -538,7 +538,6 @@ img.avatar { object-fit: cover; display: block; }
 .work__body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
 .work__body h3 { font-size: 1.1rem; margin-bottom: .35em; }
 .work__body p { font-size: .9rem; color: var(--text-muted); margin: 0; }
-.work__meta { font-size: .78rem; color: var(--text-dim); margin-top: 14px; }
 .work__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 16px; }
 .work__link {
   display: inline-flex; align-items: center; gap: 7px;
