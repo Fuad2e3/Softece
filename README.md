@@ -62,8 +62,12 @@ to the mail client too, so a filled-in form is never lost.
   Every text colour on every page clears WCAG AA in both palettes
 - **Fully responsive** — verified from 320px to 2560px with no horizontal scrolling, no text
   under 12px and no undersized tap targets, with a full-screen mobile menu
-- **Fast** — first paint under 140ms, ~20–75KB per page over 4 requests, 60fps scrolling.
-  Background glows are painted as gradients and animations stick to compositor-only properties
+- **Fast** — five same-origin requests per page and no third parties at all: the two variable
+  fonts are self-hosted (`assets/fonts/`, latin subset, ~70KB combined and cached across the
+  whole site), so a visit costs no extra DNS lookup, TLS handshake or round trip before text
+  can be styled, and the site still gets its typeface where Google Fonts is slow or blocked.
+  Gzipped, a page is ~6–8KB of HTML plus 10KB of CSS and 4.5KB of JS. 60fps scrolling:
+  background glows are painted as gradients and animations stick to compositor-only properties
 - **Scroll-reveal animations** via `IntersectionObserver`, with staggered delays
 - **Animated counters** that run once when scrolled into view
 - **Cursor-tracking glow** on service cards

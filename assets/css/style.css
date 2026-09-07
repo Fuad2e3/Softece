@@ -2,6 +2,31 @@
    Softece — Design System
    ============================================================ */
 
+/* ---------- Fonts ----------
+   Self-hosted, one variable file per family, latin subset only. Served from
+   this origin so a visit costs no third-party DNS, TLS and round trip before
+   any text can be styled — and so the page still gets its typeface on a
+   network where fonts.googleapis.com is slow or blocked.
+   swap: text paints immediately in the fallback and re-renders when the file
+   lands. ৳ is outside these subsets and comes from the system stack. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/inter-var-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url('../fonts/space-grotesk-var-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
 /* ---------- Tokens ----------
    Day / night is automatic: with no data-theme attribute the page follows the
    operating system, live. data-theme="light" or "dark" is an explicit override
@@ -459,6 +484,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ---------- Split feature ---------- */
 .split { display: grid; gap: 46px; align-items: center; }
+.split > *, .form__row > * { min-width: 0; }
 @media (min-width: 940px) { .split { grid-template-columns: 1fr 1fr; gap: 60px; } .split--rev > *:first-child { order: 2; } }
 .checks { display: grid; gap: 13px; margin-top: 26px; }
 .checks li { display: flex; gap: 12px; align-items: flex-start; font-size: .96rem; color: var(--text-muted); }
@@ -586,6 +612,10 @@ img.avatar { object-fit: cover; display: block; }
   padding: 13px 16px; border-radius: 12px; border: 1px solid var(--border);
   background: var(--surface); outline: none; transition: border-color .25s, box-shadow .25s, background .25s;
   width: 100%;
+  /* A form control's intrinsic width is its min-content size, and a grid item
+     will not shrink below that — which pushed the whole form wider than a
+     320px screen however small the container got. */
+  min-width: 0;
 }
 .field textarea { min-height: 140px; resize: vertical; }
 .field input:focus, .field textarea:focus, .field select:focus {
@@ -613,6 +643,11 @@ img.avatar { object-fit: cover; display: block; }
 .contact-item i svg { width: 20px; height: 20px; }
 .contact-item b { display: block; font-family: var(--font-display); font-size: .95rem; }
 .contact-item span { font-size: .89rem; color: var(--text-muted); }
+/* An email address is one unbreakable word: on a 320px screen it held the
+   whole row open and pushed the page into a sideways scroll. */
+.contact-item { min-width: 0; }
+.contact-item > div { min-width: 0; }
+.contact-item span, .form__note a, .footer a { overflow-wrap: anywhere; }
 
 /* ---------- Page hero ---------- */
 .phero { padding: calc(var(--nav-h) + 78px) 0 60px; text-align: center; }
