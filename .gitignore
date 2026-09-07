@@ -13,6 +13,4 @@ desktop.ini
 .env
 .env.*
 *.local
-
-# Tools folder (kept local, never pushed to GitHub)
-tools/
+tools
