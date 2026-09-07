@@ -8,7 +8,7 @@
  *        Execute as:      Me
  *        Who has access:  Anyone
  *      Authorise when Google asks. Copy the /exec URL it gives you.
- *   4. Put that URL on the form in order.html:
+ *   4. Put that URL on the form in order/index.html:
  *        <form ... data-sheet="https://script.google.com/macros/s/..../exec">
  *
  * After editing this script, deploy again (Manage deployments -> edit -> new

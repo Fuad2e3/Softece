@@ -331,18 +331,18 @@
       }
     }
 
-    /* Active nav link. Home is linked as "./" so the address bar stays on the
-       directory rather than spelling out index.html, so both forms have to
-       resolve to the same name before they are compared. */
-    var pageName = function (path) {
-      var last = path.split('?')[0].split('#')[0].split('/').pop() || '';
-      return (last === '' || last === '.') ? 'index.html' : last.toLowerCase();
+    /* Active nav link. Every page is a directory (/services/, /about/ ...) so
+       the address bar never spells out a filename. Comparing the last path
+       segment cannot work — it is empty for every one of them — so compare the
+       browser's own resolved path for the link against the current one. */
+    var samePath = function (path) {
+      return path.replace(/index\.html$/, '');
     };
-    var here = pageName(location.pathname);
+    var here = samePath(location.pathname);
     document.querySelectorAll('.nav__link, .drawer a').forEach(function (a) {
       var href = a.getAttribute('href') || '';
       if (!href || href.charAt(0) === '#') return;
-      if (pageName(href) === here) a.classList.add('is-active');
+      if (samePath(a.pathname) === here) a.classList.add('is-active');
     });
 
     /* Footer year */
