@@ -15,9 +15,10 @@ no dependencies, no framework to keep up to date.
 |---|---|
 | `index.html` | Hero with animated code card, tech marquee, all 7 services, animated stat counters, "why us" panel, 4-step process, testimonials, CTA |
 | `services.html` | A full detail section per service, plus three pricing tiers |
-| `portfolio.html` | Six case studies with a live category filter and result stats |
+| `portfolio.html` | Every public GitHub repository as a card, with a live category filter |
 | `about.html` | Company story, timeline, values, team, culture stats |
 | `contact.html` | Enquiry form with validation, direct contact details, six-question FAQ accordion |
+| `order.html` | Order form with the package preselected from the pricing card you clicked |
 
 ## Services covered
 
@@ -29,22 +30,26 @@ no dependencies, no framework to keep up to date.
 6. **API Development** — REST and GraphQL, OAuth2, rate limits, signed webhooks
 7. **Load Balancing & Scaling** — NGINX, HAProxy, AWS ELB, Cloudflare, autoscaling
 
-## Contact form
+## Forms
 
-Submissions land in a Google Sheet. There is no backend here — the form POSTs to a
-Google Apps Script web app that appends a row.
+**Contact page** — the enquiry form hands the message to the visitor's own mail
+client, prefilled. Nothing is sent until they press send there.
+
+**Order page** — `order.html` is reached from the Buy buttons on the pricing cards
+(`order.html?plan=Growth` preselects that package). Orders land in a Google Sheet.
+There is no backend here, so the form POSTs to a Google Apps Script web app that
+appends a row:
 
 1. Create a Google Sheet.
 2. **Extensions → Apps Script**, paste [`tools/sheet-endpoint.gs`](tools/sheet-endpoint.gs).
 3. **Deploy → New deployment → Web app**, with *Execute as: Me* and
    *Who has access: Anyone*. Authorise, then copy the `/exec` URL.
-4. Paste that URL into `data-sheet` on the form in `contact.html`:
-   `<form class="form" data-form data-sheet="https://script.google.com/macros/s/.../exec" ...>`
+4. Paste that URL into `data-sheet` on the form in `order.html`.
 
-Until `data-sheet` is filled in — and if the request ever fails — the form falls back to
-opening the visitor's own mail client with the enquiry already written out, so a
-filled-in form is never lost. The sheet gets a `Received` timestamp plus name, email,
-company, budget, needs and message.
+Columns: `Received`, `Package`, `Name`, `Email`, `Phone`, `Company`, `Start`, `Details`.
+
+Until `data-sheet` is filled in — and if the request ever fails — the order falls back
+to the mail client too, so a filled-in form is never lost.
 
 ## Features
 

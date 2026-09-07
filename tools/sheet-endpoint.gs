@@ -1,5 +1,5 @@
 /**
- * Softece contact form -> Google Sheet
+ * Softece order form -> Google Sheet
  *
  * Setup, once:
  *   1. Create a Google Sheet (any name).
@@ -8,15 +8,15 @@
  *        Execute as:      Me
  *        Who has access:  Anyone
  *      Authorise when Google asks. Copy the /exec URL it gives you.
- *   4. Put that URL on the form in contact.html:
+ *   4. Put that URL on the form in order.html:
  *        <form ... data-sheet="https://script.google.com/macros/s/..../exec">
  *
  * After editing this script, deploy again (Manage deployments -> edit -> new
  * version), otherwise the live URL keeps running the old code.
  */
 
-var SHEET_NAME = 'Enquiries';
-var HEADERS = ['Received', 'Name', 'Email', 'Company', 'Budget', 'Needs', 'Message'];
+var SHEET_NAME = 'Orders';
+var HEADERS = ['Received', 'Package', 'Name', 'Email', 'Phone', 'Company', 'Start', 'Details'];
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -26,12 +26,13 @@ function doPost(e) {
     var sheet = getSheet_();
     sheet.appendRow([
       new Date(),
+      data.package || '',
       data.name || '',
       data.email || '',
+      data.phone || '',
       data.company || '',
-      data.budget || '',
-      data.service || '',
-      data.message || ''
+      data.start || '',
+      data.details || ''
     ]);
     return json_({ ok: true });
   } catch (err) {
@@ -43,7 +44,7 @@ function doPost(e) {
 
 /** Opening the /exec URL in a browser should say something, not error. */
 function doGet() {
-  return json_({ ok: true, message: 'Softece contact endpoint is live. Send a POST.' });
+  return json_({ ok: true, message: 'Softece order endpoint is live. Send a POST.' });
 }
 
 function getSheet_() {

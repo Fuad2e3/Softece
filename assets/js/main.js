@@ -204,12 +204,11 @@
       });
     }
 
-    /* Contact form. The site is static, so there is no backend of our own:
-       submissions POST to a Google Apps Script web app that appends a row to
-       the enquiry sheet (see tools/sheet-endpoint.gs). The endpoint lives on
-       data-sheet in the markup. If it is not set yet, or the request fails,
-       the enquiry is handed to the visitor's own mail client instead so a
-       filled-in form is never simply lost. */
+    /* Enquiry and order forms. The site is static, so there is no backend of
+       our own: a form with data-sheet POSTs to a Google Apps Script web app
+       that appends a row to the sheet (see tools/sheet-endpoint.gs). Without
+       one — or if the request fails — the filled-in form is handed to the
+       visitor's mail client instead, so it is never simply lost. */
     var form = document.querySelector('[data-form]');
     if (form) {
       var endpoint = (form.getAttribute('data-sheet') || '').trim();
@@ -217,14 +216,35 @@
       var okBox = form.querySelector('.form__ok');
       var btn = form.querySelector('button[type="submit"]');
 
-      var read = function (n) {
-        var f = form.elements[n];
-        return f && f.value ? f.value.trim() : '';
+      /* Arriving from a pricing card: order.html?plan=Growth selects Growth. */
+      var planField = form.getAttribute('data-plan-field');
+      if (planField && form.elements[planField]) {
+        var wanted = (location.search.match(/[?&]plan=([^&]*)/) || [])[1];
+        if (wanted) {
+          wanted = decodeURIComponent(wanted.replace(/\+/g, ' ')).toLowerCase();
+          var select = form.elements[planField];
+          for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i].text.toLowerCase().indexOf(wanted) === 0) {
+              select.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      }
+
+      var collect = function () {
+        var data = {};
+        Array.prototype.forEach.call(form.elements, function (el) {
+          if (el.name && el.type !== 'submit' && el.type !== 'button') {
+            data[el.name] = (el.value || '').trim();
+          }
+        });
+        return data;
       };
       var busy = function (on) {
         if (!btn) return;
         btn.disabled = on;
-        btn.textContent = on ? 'Sending...' : 'Send message';
+        btn.textContent = on ? 'Sending...' : btn.getAttribute('data-label');
       };
       var done = function (message) {
         if (!okBox) return;
@@ -233,19 +253,21 @@
       };
       var handToMailClient = function (data) {
         if (!mailTo) return;
+        var lines = [];
+        for (var key in data) {
+          if (data.hasOwnProperty(key) && key !== 'message' && key !== 'details') {
+            lines.push(key.charAt(0).toUpperCase() + key.slice(1) + ': ' + (data[key] || '-'));
+          }
+        }
+        lines.push('', data.message || data.details || '');
         done('Your email app should be opening with everything filled in \u2014 press send there.');
         window.location.href = 'mailto:' + mailTo +
-          '?subject=' + encodeURIComponent('Project enquiry from ' + (data.name || 'the Softece site')) +
-          '&body=' + encodeURIComponent([
-            'Name: ' + data.name,
-            'Email: ' + data.email,
-            'Company: ' + (data.company || '-'),
-            'Budget: ' + data.budget,
-            'Needs: ' + data.service,
-            '',
-            data.message
-          ].join('\r\n'));
+          '?subject=' + encodeURIComponent(
+            (form.getAttribute('data-subject') || 'Project enquiry') + ' from ' + (data.name || 'the Softece site')) +
+          '&body=' + encodeURIComponent(lines.join('\r\n'));
       };
+
+      if (btn) btn.setAttribute('data-label', btn.textContent);
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -253,14 +275,7 @@
           if (form.reportValidity) form.reportValidity();
           return;
         }
-        var data = {
-          name: read('name'),
-          email: read('email'),
-          company: read('company'),
-          budget: read('budget'),
-          service: read('service'),
-          message: read('message')
-        };
+        var data = collect();
 
         if (!endpoint || !window.fetch) {
           handToMailClient(data);
