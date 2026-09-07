@@ -277,6 +277,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   transition: transform .45s var(--ease), opacity .45s var(--ease), background .2s;
 }
 .drawer a:hover { background: var(--surface-2); }
+/* The Hire us button is hidden in the mobile header, so the drawer carries it. */
+.drawer a.drawer__hire { background: var(--accent-grad); color: #fff; margin-top: 10px; }
+.drawer a.drawer__hire:hover { background: var(--accent-grad); filter: brightness(1.07); }
 .drawer.is-open a { transform: none; opacity: 1; }
 .drawer.is-open a:nth-child(1){transition-delay:.05s}
 .drawer.is-open a:nth-child(2){transition-delay:.10s}
