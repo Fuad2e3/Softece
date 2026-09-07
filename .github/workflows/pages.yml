@@ -31,7 +31,19 @@ jobs:
       - name: Write the order endpoint into the page
         env:
           SHEET_ENDPOINT: ${{ secrets.SHEET_ENDPOINT }}
-        run: python3 tools/inject-endpoint.py
+        run: |
+          python3 -c '
+          import os, pathlib
+          url = os.environ.get("SHEET_ENDPOINT", "").strip()
+          page = pathlib.Path("index.html")
+          html = page.read_text(encoding="utf-8")
+          marker = "data-sheet=\"\""
+          if url and marker in html:
+              page.write_text(html.replace(marker, f"data-sheet=\"{url}\"", 1), encoding="utf-8")
+              print("inject-endpoint: endpoint injected into index.html")
+          else:
+              print("inject-endpoint: SHEET_ENDPOINT is empty or marker missing.")
+          '
 
       - uses: actions/upload-pages-artifact@v3
         with:
