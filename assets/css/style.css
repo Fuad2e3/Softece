@@ -478,6 +478,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .quote p { font-size: .97rem; color: var(--text-muted); font-style: italic; }
 .quote__by { display: flex; align-items: center; gap: 13px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
 .avatar { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; color: #fff; background: var(--accent-grad); flex: none; font-size: .95rem; }
+img.avatar { object-fit: cover; display: block; }
 .quote__by b { display: block; font-size: .92rem; }
 .quote__by small { color: var(--text-dim); font-size: .8rem; }
 
