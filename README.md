@@ -61,7 +61,9 @@ to the mail client too, so a filled-in form is never lost.
   palette avoids a full-brightness white page, the two pairings that cause the most glare.
   Every text colour on every page clears WCAG AA in both palettes
 - **Fully responsive** — verified from 320px to 2560px with no horizontal scrolling, no text
-  under 12px and no undersized tap targets, with a full-screen mobile menu
+  under 12px and no undersized tap targets, with a full-screen mobile menu. Below 640px the
+  vertical rhythm tightens, work-card covers become a strip rather than half the card, and
+  the portfolio filters scroll sideways instead of stacking three rows deep
 - **Fast** — five same-origin requests per page and no third parties at all: the two variable
   fonts are self-hosted (`assets/fonts/`, latin subset, ~70KB combined and cached across the
   whole site), so a visit costs no extra DNS lookup, TLS handshake or round trip before text
