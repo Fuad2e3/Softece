@@ -512,7 +512,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .filter { padding: 9px 20px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface); font-size: .87rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all .25s; }
 .filter:hover { color: var(--text); border-color: var(--border-strong); }
 .filter.is-active { background: var(--accent-grad); border-color: transparent; color: #fff; }
-.work { border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; background: var(--surface); transition: transform .4s var(--ease), border-color .4s, box-shadow .4s; }
+.work { border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; transition: transform .4s var(--ease), border-color .4s, box-shadow .4s; }
 .work:hover { transform: translateY(-8px); border-color: var(--border-strong); box-shadow: var(--shadow); }
 .work.is-hidden { display: none; }
 .work__cover { aspect-ratio: 16/10; display: grid; place-items: center; position: relative; overflow: hidden; }
@@ -525,9 +525,22 @@ ul { margin: 0; padding: 0; list-style: none; }
 .cv-4 { background: linear-gradient(135deg,#f59e0b,#f472b6); }
 .cv-5 { background: linear-gradient(135deg,#10b981,#22d3ee); }
 .cv-6 { background: linear-gradient(135deg,#6366f1,#a855f7); }
-.work__body { padding: 24px; }
+.work__body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
 .work__body h3 { font-size: 1.1rem; margin-bottom: .35em; }
 .work__body p { font-size: .9rem; color: var(--text-muted); margin: 0; }
+.work__meta { font-size: .78rem; color: var(--text-dim); margin-top: 14px; }
+.work__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 16px; }
+.work__link {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 15px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--bg-soft, transparent);
+  font-size: .82rem; font-weight: 500; color: var(--text-muted);
+  transition: color .25s, border-color .25s, transform .25s;
+}
+.work__link:hover { color: var(--text); border-color: var(--border-strong); transform: translateY(-2px); }
+.work__link svg { width: 15px; height: 15px; }
+.work__link--live { background: var(--accent-grad); border-color: transparent; color: #fff; }
+.work__link--live:hover { color: #fff; }
 
 /* ---------- Team ---------- */
 .member { text-align: center; padding: 32px 24px; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--surface); transition: transform .35s var(--ease), border-color .35s; }
