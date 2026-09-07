@@ -117,6 +117,9 @@
       });
     }
 
+    /* Callbacks the router fires after it shows a section. */
+    var routeHooks = [];
+
     /* Scroll reveal */
     var revealables = document.querySelectorAll('[data-reveal]');
     if ('IntersectionObserver' in window) {
@@ -208,30 +211,29 @@
        our own: a form with data-sheet POSTs to a Google Apps Script web app
        that appends a row to the sheet (see tools/sheet-endpoint.gs). Without
        one — or if the request fails — the filled-in form is handed to the
-       visitor's mail client instead, so it is never simply lost. */
-    var form = document.querySelector('[data-form]');
-    if (form) {
+       visitor's mail client instead, so it is never simply lost.
+       Both forms live in the same document now, so each is wired separately. */
+    document.querySelectorAll('[data-form]').forEach(function (form) {
       var endpoint = (form.getAttribute('data-sheet') || '').trim();
       var mailTo = form.getAttribute('data-mailto');
       var okBox = form.querySelector('.form__ok');
       var btn = form.querySelector('button[type="submit"]');
-
-      /* Arriving from a pricing card: order.html?plan=Growth fixes the package
-         to Growth. The labels live on the form as data-plan-*, so the prices
-         are written once, in the markup. Enterprise has no fixed price, so it
-         is the one package that asks the visitor for a figure. */
       var planField = form.getAttribute('data-plan-field');
+
+      /* Arriving from a pricing card: #order/growth fixes the package to
+         Growth. The labels live on the form as data-plan-*, so the prices are
+         written once, in the markup. Enterprise has no fixed price, so it is
+         the one package that asks the visitor for a figure. */
       if (planField && form.elements[planField]) {
-        var wanted = (location.search.match(/[?&]plan=([^&]*)/) || [])[1];
-        if (wanted) {
-          wanted = decodeURIComponent(wanted.replace(/\+/g, ' ')).trim().toLowerCase();
-          var label = form.getAttribute('data-plan-' + wanted);
+        routeHooks.push(function (route, plan) {
+          if (route !== 'order') return;
+          var label = plan && form.getAttribute('data-plan-' + plan.toLowerCase());
           if (label) form.elements[planField].value = label;
-        }
-        var priceField = document.getElementById('price-field');
-        if (priceField) {
-          priceField.hidden = form.elements[planField].value.toLowerCase().indexOf('enterprise') !== 0;
-        }
+          var priceField = document.getElementById('order-price-field');
+          if (priceField) {
+            priceField.hidden = form.elements[planField].value.toLowerCase().indexOf('enterprise') !== 0;
+          }
+        });
       }
 
       var collect = function () {
@@ -302,48 +304,93 @@
           handToMailClient(data);
         });
       });
-    }
-
-    /* Landing on an anchor from another page (Hire us -> services.html#pricing).
-       The browser jumps before the web fonts arrive; when they do, everything
-       above the target re-flows and the section has drifted out from under the
-       nav. Re-align on load and once the fonts are ready. */
-    if (location.hash.length > 1) {
-      var jumpTo = null;
-      try { jumpTo = document.querySelector(location.hash); } catch (e) {}
-      if (jumpTo) {
-        var navBar = document.querySelector('.nav');
-        var align = function () {
-          var offset = (navBar ? navBar.offsetHeight : 0) + 24;
-          var y = jumpTo.getBoundingClientRect().top + (window.pageYOffset || 0) - offset;
-          if (Math.abs(y - (window.pageYOffset || 0)) < 2) return;
-          try {
-            window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
-          } catch (e) {
-            window.scrollTo(0, Math.max(0, y));
-          }
-        };
-        align();
-        window.addEventListener('load', align);
-        if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
-          document.fonts.ready.then(align);
-        }
-      }
-    }
-
-    /* Active nav link. Every page is a directory (/services/, /about/ ...) so
-       the address bar never spells out a filename. Comparing the last path
-       segment cannot work — it is empty for every one of them — so compare the
-       browser's own resolved path for the link against the current one. */
-    var samePath = function (path) {
-      return path.replace(/index\.html$/, '');
-    };
-    var here = samePath(location.pathname);
-    document.querySelectorAll('.nav__link, .drawer a').forEach(function (a) {
-      var href = a.getAttribute('href') || '';
-      if (!href || href.charAt(0) === '#') return;
-      if (samePath(a.pathname) === here) a.classList.add('is-active');
     });
+
+    /* ---------- Routing ----------
+       The whole site is one document: six <section class="route"> blocks, one
+       shown at a time. Everything after the site root is a hash and nothing
+       else — #services, #contact, #order/growth — and a deep anchor such as
+       #pricing or #team resolves to the section that owns it, so those links
+       keep working and stay short. With scripting off no section is hidden
+       and the page reads top to bottom. */
+    var sections = {};
+    document.querySelectorAll('.route').forEach(function (el) {
+      sections[el.getAttribute('data-route')] = el;
+    });
+
+    if (Object.keys(sections).length) {
+      var OWNER = {
+        process: 'home', pricing: 'services', app: 'services', cross: 'services',
+        web: 'services', server: 'services', database: 'services', api: 'services',
+        balancer: 'services', team: 'about'
+      };
+      var navBar = document.querySelector('.nav');
+
+      var readHash = function () {
+        var bits = (location.hash || '').replace(/^#/, '').split('/');
+        var key = (bits[0] || '').toLowerCase();
+        if (!key) return { route: 'home', anchor: '', extra: '' };
+        if (sections[key]) return { route: key, anchor: '', extra: bits[1] || '' };
+        if (OWNER[key]) return { route: OWNER[key], anchor: key, extra: '' };
+        return { route: 'home', anchor: '', extra: '' };
+      };
+
+      var routeOf = function (href) {
+        var key = (href || '').replace(/^#/, '').split('/')[0].toLowerCase();
+        return sections[key] ? key : (OWNER[key] || '');
+      };
+
+      /* html has scroll-behavior:smooth for in-page links, which would animate
+         a route change across thousands of pixels of the section just shown.
+         Arriving somewhere new should be instant. */
+      var jump = function (y) {
+        /* scrollTo's "auto" defers to the CSS property rather than overriding
+           it, so turn smooth off around the call instead. */
+        var prev = root.style.scrollBehavior;
+        root.style.scrollBehavior = 'auto';
+        window.scrollTo(0, y);
+        root.style.scrollBehavior = prev;
+      };
+
+      var scrollToAnchor = function (id) {
+        var target = id && document.getElementById(id);
+        if (!target) { jump(0); return; }
+        var y = target.getBoundingClientRect().top + (window.pageYOffset || 0) -
+                ((navBar ? navBar.offsetHeight : 0) + 24);
+        jump(Math.max(0, y));
+      };
+
+      var go = function (first) {
+        var at = readHash();
+        Object.keys(sections).forEach(function (name) {
+          sections[name].hidden = (name !== at.route);
+        });
+        var title = sections[at.route].getAttribute('data-title');
+        if (title) document.title = title;
+
+        document.querySelectorAll('.nav__link').forEach(function (a) {
+          a.classList.toggle('is-active', routeOf(a.getAttribute('href')) === at.route);
+        });
+
+        routeHooks.forEach(function (fn) { fn(at.route, at.extra); });
+
+        /* A section that was display:none has no layout, so let it lay out
+           before measuring where the anchor ended up. */
+        if (at.anchor) {
+          requestAnimationFrame(function () { scrollToAnchor(at.anchor); });
+          /* The web fonts land after this and re-flow everything above the
+             target, so on a cold load take the measurement again. */
+          if (first && document.fonts && document.fonts.ready && document.fonts.ready.then) {
+            document.fonts.ready.then(function () { scrollToAnchor(at.anchor); });
+          }
+        } else if (!first) {
+          jump(0);
+        }
+      };
+
+      window.addEventListener('hashchange', function () { go(false); });
+      go(true);
+    }
 
     /* Footer year */
     document.querySelectorAll('[data-year]').forEach(function (el) {

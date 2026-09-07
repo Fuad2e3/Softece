@@ -624,6 +624,11 @@ img.avatar { object-fit: cover; display: block; }
 .field input::placeholder, .field textarea::placeholder { color: var(--text-dim); }
 /* .field sets display:grid, which would beat the [hidden] attribute. */
 .field[hidden] { display: none; }
+/* Routing: one section is shown at a time, but only where scripting can put
+   them back. Without JS every section stays visible and the page reads as one
+   long document rather than a blank screen. */
+html:not(.js) .route[hidden] { display: block; }
+.route[hidden] { display: none; }
 .field input[readonly] { background: var(--bg-soft); color: var(--text-muted); cursor: default; }
 .field__hint { font-size: .8rem; color: var(--text-dim); margin: 0; }
 .field__hint a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }

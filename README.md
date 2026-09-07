@@ -9,16 +9,25 @@ no dependencies, no framework to keep up to date.
 
 ---
 
-## Pages
+## One page, six routes
 
-| Page | What's on it |
+The whole site is a single `index.html`. Each section is a `<section class="route">`
+and the router in `assets/js/main.js` shows one at a time, so the address never grows
+past a hash:
+
+| Address | What's on it |
 |---|---|
-| `/` | Hero with animated code card, tech marquee, all 7 services, animated stat counters, "why us" panel, 4-step process, testimonials, CTA |
-| `/services/` | A full detail section per service, plus three pricing tiers |
-| `/portfolio/` | Every public GitHub repository as a card, with a live category filter |
-| `/about/` | Company story, timeline, values, team, culture stats |
-| `/contact/` | Enquiry form with validation, direct contact details, six-question FAQ accordion |
-| `/order/` | Order form with the package preselected from the pricing card you clicked |
+| `/Softece/` | Hero with animated code card, tech marquee, all 7 services, animated stat counters, "why us" panel, 4-step process, testimonials, CTA |
+| `/Softece/#services` | A full detail section per service, plus three pricing tiers |
+| `/Softece/#work` | Every public GitHub repository as a card, with a live category filter |
+| `/Softece/#about` | Company story, timeline, team, culture stats |
+| `/Softece/#contact` | Enquiry form with validation, direct contact details, six-question FAQ accordion |
+| `/Softece/#order` | Order form with the package preselected — `#order/growth` picks Growth |
+
+Deep anchors resolve to the section that owns them, so `#pricing`, `#team`, `#process`
+and the per-service anchors stay short and keep working. The old `.html` and directory
+addresses redirect to their route. With JavaScript off nothing is hidden and the page
+reads as one long document.
 
 ## Services covered
 
