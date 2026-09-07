@@ -46,7 +46,8 @@ appends a row:
    *Who has access: Anyone*. Authorise, then copy the `/exec` URL.
 4. Paste that URL into `data-sheet` on the form in `order.html`.
 
-Columns: `Received`, `Package`, `Name`, `Email`, `Phone`, `Company`, `Start`, `Details`.
+Columns: `Received`, `Package`, `Price`, `Name`, `Email`, `Phone`, `Company`, `Start`, `Details`.
+`Price` is only filled for Enterprise, which is the one package without a set price.
 
 Until `data-sheet` is filled in — and if the request ever fails — the order falls back
 to the mail client too, so a filled-in form is never lost.

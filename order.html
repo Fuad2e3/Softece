@@ -128,19 +128,26 @@ if(t==="light"||t==="dark")d.setAttribute("data-theme",t);}catch(e){}})();
       <div data-reveal>
         <div class="card" style="padding:34px">
           <h2 style="font-size:1.5rem">Order form</h2>
-          <p class="text-muted" style="font-size:.94rem">The package you clicked is already selected. Change it here if you picked the wrong one.</p>
+          <p class="text-muted" style="font-size:.94rem">The package is fixed to the card you clicked &mdash; fill in the rest and send.</p>
 
           <!-- data-sheet: paste the Apps Script /exec URL here (see tools/sheet-endpoint.gs)
                so orders land in the sheet. Left empty, the order is handed to the
                visitor's mail client instead, so nothing is lost. -->
-          <form class="form" data-form data-plan-field="package" data-subject="Order" data-sheet="" data-mailto="fuadkalaroa2002@gmail.com" style="margin-top:24px">
+          <form class="form" data-form data-plan-field="package" data-subject="Order"
+                data-plan-launch="Launch &mdash; ৳3,000 / project"
+                data-plan-growth="Growth &mdash; ৳9,500 / project"
+                data-plan-enterprise="Enterprise &mdash; custom price"
+                data-sheet="" data-mailto="fuadkalaroa2002@gmail.com" style="margin-top:24px">
             <div class="field">
               <label for="package">Package</label>
-              <select id="package" name="package">
-                <option value="Launch &mdash; ৳3,000 / project">Launch &mdash; ৳3,000 / project</option>
-                <option value="Growth &mdash; ৳9,500 / project">Growth &mdash; ৳9,500 / project</option>
-                <option value="Enterprise &mdash; custom quote">Enterprise &mdash; custom quote</option>
-              </select>
+              <input id="package" name="package" type="text" value="Launch &mdash; ৳3,000 / project" readonly>
+              <p class="field__hint">Set by the card you clicked. <a href="services.html#pricing">Pick a different package</a></p>
+            </div>
+
+            <div class="field" id="price-field" hidden>
+              <label for="price">Your price (BDT)</label>
+              <input id="price" name="price" type="text" placeholder="What is this worth to you? Leave blank for a quote">
+              <p class="field__hint">Enterprise is priced per project &mdash; name a figure and we will tell you what fits inside it.</p>
             </div>
 
             <div class="form__row">

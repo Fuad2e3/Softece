@@ -592,6 +592,11 @@ img.avatar { object-fit: cover; display: block; }
   border-color: var(--brand); background: var(--surface-2); box-shadow: 0 0 0 4px rgba(124,92,255,.15);
 }
 .field input::placeholder, .field textarea::placeholder { color: var(--text-dim); }
+/* .field sets display:grid, which would beat the [hidden] attribute. */
+.field[hidden] { display: none; }
+.field input[readonly] { background: var(--bg-soft); color: var(--text-muted); cursor: default; }
+.field__hint { font-size: .8rem; color: var(--text-dim); margin: 0; }
+.field__hint a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
 .field select option { background: var(--bg-soft); color: var(--text); }
 .form__row { display: grid; gap: 18px; }
 @media (min-width: 640px) { .form__row { grid-template-columns: 1fr 1fr; } }

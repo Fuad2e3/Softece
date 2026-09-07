@@ -16,7 +16,7 @@
  */
 
 var SHEET_NAME = 'Orders';
-var HEADERS = ['Received', 'Package', 'Name', 'Email', 'Phone', 'Company', 'Start', 'Details'];
+var HEADERS = ['Received', 'Package', 'Price', 'Name', 'Email', 'Phone', 'Company', 'Start', 'Details'];
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -27,6 +27,7 @@ function doPost(e) {
     sheet.appendRow([
       new Date(),
       data.package || '',
+      data.price || '',
       data.name || '',
       data.email || '',
       data.phone || '',

@@ -216,19 +216,21 @@
       var okBox = form.querySelector('.form__ok');
       var btn = form.querySelector('button[type="submit"]');
 
-      /* Arriving from a pricing card: order.html?plan=Growth selects Growth. */
+      /* Arriving from a pricing card: order.html?plan=Growth fixes the package
+         to Growth. The labels live on the form as data-plan-*, so the prices
+         are written once, in the markup. Enterprise has no fixed price, so it
+         is the one package that asks the visitor for a figure. */
       var planField = form.getAttribute('data-plan-field');
       if (planField && form.elements[planField]) {
         var wanted = (location.search.match(/[?&]plan=([^&]*)/) || [])[1];
         if (wanted) {
-          wanted = decodeURIComponent(wanted.replace(/\+/g, ' ')).toLowerCase();
-          var select = form.elements[planField];
-          for (var i = 0; i < select.options.length; i++) {
-            if (select.options[i].text.toLowerCase().indexOf(wanted) === 0) {
-              select.selectedIndex = i;
-              break;
-            }
-          }
+          wanted = decodeURIComponent(wanted.replace(/\+/g, ' ')).trim().toLowerCase();
+          var label = form.getAttribute('data-plan-' + wanted);
+          if (label) form.elements[planField].value = label;
+        }
+        var priceField = document.getElementById('price-field');
+        if (priceField) {
+          priceField.hidden = form.elements[planField].value.toLowerCase().indexOf('enterprise') !== 0;
         }
       }
 
