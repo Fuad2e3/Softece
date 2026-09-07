@@ -8,8 +8,9 @@
  *        Execute as:      Me
  *        Who has access:  Anyone
  *      Authorise when Google asks. Copy the /exec URL it gives you.
- *   4. Put that URL on the order form in index.html:
- *        <form ... data-sheet="https://script.google.com/macros/s/..../exec">
+ *   4. Put that URL in the SHEET_ENDPOINT repository secret (Settings ->
+ *      Secrets and variables -> Actions). The publish workflow writes it into
+ *      index.html at build time, so it never lands in the repository.
  *
  * After editing this script, deploy again (Manage deployments -> edit -> new
  * version), otherwise the live URL keeps running the old code.
