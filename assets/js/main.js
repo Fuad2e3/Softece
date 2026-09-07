@@ -302,6 +302,33 @@
       });
     }
 
+    /* Landing on an anchor from another page (Hire us -> services.html#pricing).
+       The browser jumps before the web fonts arrive; when they do, everything
+       above the target re-flows and the section has drifted out from under the
+       nav. Re-align on load and once the fonts are ready. */
+    if (location.hash.length > 1) {
+      var jumpTo = null;
+      try { jumpTo = document.querySelector(location.hash); } catch (e) {}
+      if (jumpTo) {
+        var navBar = document.querySelector('.nav');
+        var align = function () {
+          var offset = (navBar ? navBar.offsetHeight : 0) + 24;
+          var y = jumpTo.getBoundingClientRect().top + (window.pageYOffset || 0) - offset;
+          if (Math.abs(y - (window.pageYOffset || 0)) < 2) return;
+          try {
+            window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
+          } catch (e) {
+            window.scrollTo(0, Math.max(0, y));
+          }
+        };
+        align();
+        window.addEventListener('load', align);
+        if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+          document.fonts.ready.then(align);
+        }
+      }
+    }
+
     /* Active nav link */
     var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     document.querySelectorAll('.nav__link, .drawer a').forEach(function (a) {
