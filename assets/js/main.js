@@ -146,6 +146,19 @@
       });
     });
 
+    /* Dynamic years since founding (auto count from January 2021) */
+    document.querySelectorAll('[data-since-year]').forEach(function (el) {
+      var y = parseInt(el.getAttribute('data-since-year'), 10);
+      var m = parseInt(el.getAttribute('data-since-month') || '1', 10) - 1;
+      var now = new Date();
+      var diff = now.getFullYear() - y;
+      if (now.getMonth() < m) diff--;
+      var years = Math.max(1, diff);
+      el.setAttribute('data-count', years);
+      var suffix = el.getAttribute('data-suffix') || '+ yrs';
+      el.textContent = years + suffix;
+    });
+
     /* Counters */
     var counters = document.querySelectorAll('[data-count]');
     if (counters.length && 'IntersectionObserver' in window) {
