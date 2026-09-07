@@ -204,19 +204,37 @@
       });
     }
 
-    /* Contact form (front-end only demo) */
+    /* Contact form. The site is static, so there is nothing to POST to —
+       the form hands the enquiry to the visitor's own mail client instead.
+       The destination lives in the markup, on data-mailto. */
     var form = document.querySelector('[data-form]');
-    if (form) {
+    if (form && form.getAttribute('data-mailto')) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+        if (form.checkValidity && !form.checkValidity()) {
+          if (form.reportValidity) form.reportValidity();
+          return;
+        }
+        var val = function (n) {
+          var f = form.elements[n];
+          return f && f.value ? f.value.trim() : '';
+        };
+        var body = [
+          'Name: ' + val('name'),
+          'Email: ' + val('email'),
+          'Company: ' + (val('company') || '-'),
+          'Budget: ' + val('budget'),
+          'Needs: ' + val('service'),
+          '',
+          val('message')
+        ].join('\r\n');
+
         var ok = form.querySelector('.form__ok');
-        var btn = form.querySelector('button[type="submit"]');
-        if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
-        setTimeout(function () {
-          if (ok) ok.classList.add('is-shown');
-          form.reset();
-          if (btn) { btn.disabled = false; btn.textContent = 'Send message'; }
-        }, 700);
+        if (ok) ok.classList.add('is-shown');
+        /* No reset: if the mail client never opens, the typed text survives. */
+        window.location.href = 'mailto:' + form.getAttribute('data-mailto') +
+          '?subject=' + encodeURIComponent('Project enquiry from ' + (val('name') || 'the Softece site')) +
+          '&body=' + encodeURIComponent(body);
       });
     }
 
