@@ -204,37 +204,86 @@
       });
     }
 
-    /* Contact form. The site is static, so there is nothing to POST to —
-       the form hands the enquiry to the visitor's own mail client instead.
-       The destination lives in the markup, on data-mailto. */
+    /* Contact form. The site is static, so there is no backend of our own:
+       submissions POST to a Google Apps Script web app that appends a row to
+       the enquiry sheet (see tools/sheet-endpoint.gs). The endpoint lives on
+       data-sheet in the markup. If it is not set yet, or the request fails,
+       the enquiry is handed to the visitor's own mail client instead so a
+       filled-in form is never simply lost. */
     var form = document.querySelector('[data-form]');
-    if (form && form.getAttribute('data-mailto')) {
+    if (form) {
+      var endpoint = (form.getAttribute('data-sheet') || '').trim();
+      var mailTo = form.getAttribute('data-mailto');
+      var okBox = form.querySelector('.form__ok');
+      var btn = form.querySelector('button[type="submit"]');
+
+      var read = function (n) {
+        var f = form.elements[n];
+        return f && f.value ? f.value.trim() : '';
+      };
+      var busy = function (on) {
+        if (!btn) return;
+        btn.disabled = on;
+        btn.textContent = on ? 'Sending...' : 'Send message';
+      };
+      var done = function (message) {
+        if (!okBox) return;
+        if (message) okBox.textContent = message;
+        okBox.classList.add('is-shown');
+      };
+      var handToMailClient = function (data) {
+        if (!mailTo) return;
+        done('Your email app should be opening with everything filled in \u2014 press send there.');
+        window.location.href = 'mailto:' + mailTo +
+          '?subject=' + encodeURIComponent('Project enquiry from ' + (data.name || 'the Softece site')) +
+          '&body=' + encodeURIComponent([
+            'Name: ' + data.name,
+            'Email: ' + data.email,
+            'Company: ' + (data.company || '-'),
+            'Budget: ' + data.budget,
+            'Needs: ' + data.service,
+            '',
+            data.message
+          ].join('\r\n'));
+      };
+
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (form.checkValidity && !form.checkValidity()) {
           if (form.reportValidity) form.reportValidity();
           return;
         }
-        var val = function (n) {
-          var f = form.elements[n];
-          return f && f.value ? f.value.trim() : '';
+        var data = {
+          name: read('name'),
+          email: read('email'),
+          company: read('company'),
+          budget: read('budget'),
+          service: read('service'),
+          message: read('message')
         };
-        var body = [
-          'Name: ' + val('name'),
-          'Email: ' + val('email'),
-          'Company: ' + (val('company') || '-'),
-          'Budget: ' + val('budget'),
-          'Needs: ' + val('service'),
-          '',
-          val('message')
-        ].join('\r\n');
 
-        var ok = form.querySelector('.form__ok');
-        if (ok) ok.classList.add('is-shown');
-        /* No reset: if the mail client never opens, the typed text survives. */
-        window.location.href = 'mailto:' + form.getAttribute('data-mailto') +
-          '?subject=' + encodeURIComponent('Project enquiry from ' + (val('name') || 'the Softece site')) +
-          '&body=' + encodeURIComponent(body);
+        if (!endpoint || !window.fetch) {
+          handToMailClient(data);
+          return;
+        }
+
+        busy(true);
+        /* no-cors keeps this a simple request: Apps Script answers from a
+           redirect it cannot put CORS headers on, so the reply is opaque —
+           a resolved promise is all the confirmation there is. */
+        fetch(endpoint, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(data)
+        }).then(function () {
+          busy(false);
+          done(null);
+          form.reset();
+        })['catch'](function () {
+          busy(false);
+          handToMailClient(data);
+        });
       });
     }
 
