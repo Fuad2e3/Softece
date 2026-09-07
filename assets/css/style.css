@@ -125,7 +125,13 @@
 
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* The nav is fixed, so an anchor jump would otherwise land with the
+     section heading hidden underneath it. */
+  scroll-padding-top: calc(var(--nav-h) + 24px);
+}
 body {
   margin: 0;
   font-family: var(--font-body);
