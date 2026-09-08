@@ -535,9 +535,15 @@
 
         var endpoint = '';
         try {
-          endpoint = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy8=') +
-                     atob('QUtmeWNieXFDR19QbmtsRkM4Z1V1RDQwZmxGOVB4V20wd3pyT1ZjYkFxalNnWHZRdWV4eTFWNG1OdTBZZzdnVVhWZE96ZXA0') +
-                     atob('L2V4ZWM=');
+          var orderForm = document.querySelector('[data-form][data-subject="Order"]') || document.querySelector('[data-form]');
+          var ds = orderForm ? (orderForm.getAttribute('data-sheet') || '').trim() : '';
+          if (ds) {
+            endpoint = ds;
+          } else {
+            endpoint = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy8=') +
+                       atob('QUtmeWNieXFDR19QbmtsRkM4Z1V1RDQwZmxGOVB4V20wd3pyT1ZjYkFxalNnWHZRdWV4eTFWNG1OdTBZZzdnVVhWZE96ZXA0') +
+                       atob('L2V4ZWM=');
+          }
         } catch (_) {}
 
         var clientPhone = (lastOrderData && lastOrderData.phone) || (document.getElementById('order-phone') ? document.getElementById('order-phone').value : '');
