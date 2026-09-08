@@ -2200,6 +2200,13 @@
                       </span>
                     </label>
                     <label class="pay-method-opt">
+                      <input type="radio" name="payment_method" value="Rocket (01902780443)">
+                      <span class="pay-method-box">
+                        <span class="pay-method-title"><span class="pay-badge pay-badge--rocket">Rocket</span> Send Money &middot; 01902780443</span>
+                        <span class="pay-method-desc">Personal / Send Money to confirm your development sprint slot immediately.</span>
+                      </span>
+                    </label>
+                    <label class="pay-method-opt">
                       <input type="radio" name="payment_method" value="Bank Transfer">
                       <span class="pay-method-box">
                         <span class="pay-method-title">🏦 Bank Wire / Transfer</span>
@@ -2212,7 +2219,7 @@
                 <div class="field" id="order-trx-field">
                   <label for="order-trx">Transaction ID / TrxID <span class="text-muted">(optional)</span></label>
                   <input id="order-trx" name="trx_id" type="text" placeholder="e.g. 9K82JD82 (leave blank if paying later)">
-                  <p class="field__hint">If you have already sent a 50% advance via bKash/Nagad, enter your TrxID here.</p>
+                  <p class="field__hint">If you have already sent a 50% advance via bKash/Nagad/Rocket, enter your TrxID here.</p>
                 </div>
 
                 <button class="btn btn--primary btn--block btn--lg" type="submit">Send order</button>
@@ -2260,7 +2267,7 @@
                   </div>
 
                   <div class="order-receipt__paybox" id="receipt-paybox">
-                    <h4>Payment Details (bKash &amp; Nagad Personal)</h4>
+                    <h4>Payment Details (bKash, Nagad &amp; Rocket Personal)</h4>
                     <p class="order-receipt__desc">To initiate immediate architecture &amp; development, send 50% advance to our verified number:</p>
                     <div class="copy-box">
                       <div class="copy-box__num">
@@ -2286,7 +2293,7 @@
                   <div class="order-receipt__trx" id="receipt-trx-section">
                     <label for="receipt-trx-input">Have you already sent the advance payment?</label>
                     <div class="order-receipt__trx-form">
-                      <input type="text" id="receipt-trx-input" placeholder="Enter bKash/Nagad Transaction ID (TrxID)">
+                      <input type="text" id="receipt-trx-input" placeholder="Enter bKash/Nagad/Rocket Transaction ID (TrxID)">
                       <button type="button" class="btn btn--primary btn--sm" id="receipt-trx-submit">Submit TrxID</button>
                     </div>
                     <p class="field__hint" id="receipt-trx-status">Submitting will update your payment details directly in our Google Sheet.</p>

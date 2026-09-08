@@ -1086,6 +1086,9 @@ html:not(.js) .route[hidden] { display: block; }
 .pay-badge--nagad {
   background: #f7941d;
 }
+.pay-badge--rocket {
+  background: #8c3494;
+}
 
 /* Post-order Receipt Card */
 .order-receipt {

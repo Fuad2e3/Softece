@@ -463,7 +463,7 @@
       });
     });
 
-    /* Copy bKash/Nagad Number */
+    /* Copy bKash/Nagad/Rocket Number */
     var copyBtn = document.getElementById('btn-copy-number');
     if (copyBtn) {
       copyBtn.addEventListener('click', function () {
@@ -477,10 +477,10 @@
         };
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(num).then(handleSuccess)['catch'](function () {
-            window.prompt('Copy bKash/Nagad Number:', num);
+            window.prompt('Copy bKash/Nagad/Rocket Number:', num);
           });
         } else {
-          window.prompt('Copy bKash/Nagad Number:', num);
+          window.prompt('Copy bKash/Nagad/Rocket Number:', num);
         }
       });
     }
