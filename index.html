@@ -2207,6 +2207,13 @@
                       </span>
                     </label>
                     <label class="pay-method-opt">
+                      <input type="radio" name="payment_method" value="Binance Pay (570841564)">
+                      <span class="pay-method-box">
+                        <span class="pay-method-title"><span class="pay-badge pay-badge--binance">Binance</span> Pay ID &middot; 570841564</span>
+                        <span class="pay-method-desc">USDT / Crypto &middot; 0% fee instant payment. Ideal for international &amp; web3 clients.</span>
+                      </span>
+                    </label>
+                    <label class="pay-method-opt">
                       <input type="radio" name="payment_method" value="Bank Transfer">
                       <span class="pay-method-box">
                         <span class="pay-method-title">🏦 Bank Wire / Transfer</span>
@@ -2218,8 +2225,8 @@
 
                 <div class="field" id="order-trx-field">
                   <label for="order-trx">Transaction ID / TrxID <span class="text-muted">(optional)</span></label>
-                  <input id="order-trx" name="trx_id" type="text" placeholder="e.g. 9K82JD82 (leave blank if paying later)">
-                  <p class="field__hint">If you have already sent a 50% advance via bKash/Nagad/Rocket, enter your TrxID here.</p>
+                  <input id="order-trx" name="trx_id" type="text" placeholder="e.g. 9K82JD82 or Binance Order ID (leave blank if paying later)">
+                  <p class="field__hint">If you have already sent a 50% advance via bKash/Nagad/Rocket or Binance, enter your TrxID / Pay ID here.</p>
                 </div>
 
                 <button class="btn btn--primary btn--block btn--lg" type="submit">Send order</button>
@@ -2267,16 +2274,27 @@
                   </div>
 
                   <div class="order-receipt__paybox" id="receipt-paybox">
-                    <h4>Payment Details (bKash, Nagad &amp; Rocket Personal)</h4>
-                    <p class="order-receipt__desc">To initiate immediate architecture &amp; development, send 50% advance to our verified number:</p>
+                    <h4>Payment Details (bKash, Nagad, Rocket &amp; Binance)</h4>
+                    <p class="order-receipt__desc">To initiate immediate architecture &amp; development, send 50% advance to our verified accounts:</p>
                     <div class="copy-box">
                       <div class="copy-box__num">
-                        <span class="copy-box__tag">Personal</span>
+                        <span class="copy-box__tag">bKash / Nagad / Rocket</span>
                         <code>01902780443</code>
                       </div>
                       <button type="button" class="btn btn--sm btn--outline" id="btn-copy-number">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         <span id="copy-btn-text">Copy Number</span>
+                      </button>
+                    </div>
+
+                    <div class="copy-box" style="margin-top:8px">
+                      <div class="copy-box__num">
+                        <span class="copy-box__tag" style="color:#F0B90B;background:rgba(240,185,11,.15)">Binance Pay ID</span>
+                        <code style="color:#F0B90B">570841564</code>
+                      </div>
+                      <button type="button" class="btn btn--sm btn--outline" id="btn-copy-binance">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span id="copy-binance-text">Copy Pay ID</span>
                       </button>
                     </div>
 
@@ -2293,7 +2311,7 @@
                   <div class="order-receipt__trx" id="receipt-trx-section">
                     <label for="receipt-trx-input">Have you already sent the advance payment?</label>
                     <div class="order-receipt__trx-form">
-                      <input type="text" id="receipt-trx-input" placeholder="Enter bKash/Nagad/Rocket Transaction ID (TrxID)">
+                      <input type="text" id="receipt-trx-input" placeholder="Enter bKash/Nagad/Rocket TrxID or Binance Pay ID">
                       <button type="button" class="btn btn--primary btn--sm" id="receipt-trx-submit">Submit TrxID</button>
                     </div>
                     <p class="field__hint" id="receipt-trx-status">Submitting will update your payment details directly in our Google Sheet.</p>

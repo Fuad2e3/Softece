@@ -485,6 +485,28 @@
       });
     }
 
+    /* Copy Binance Pay ID */
+    var copyBinanceBtn = document.getElementById('btn-copy-binance');
+    if (copyBinanceBtn) {
+      copyBinanceBtn.addEventListener('click', function () {
+        var binanceId = '570841564';
+        var copyText = document.getElementById('copy-binance-text');
+        var handleSuccess = function () {
+          if (copyText) copyText.textContent = 'Copied!';
+          setTimeout(function () {
+            if (copyText) copyText.textContent = 'Copy Pay ID';
+          }, 2500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(binanceId).then(handleSuccess)['catch'](function () {
+            window.prompt('Copy Binance Pay ID:', binanceId);
+          });
+        } else {
+          window.prompt('Copy Binance Pay ID:', binanceId);
+        }
+      });
+    }
+
     /* Submit Late TrxID from receipt card */
     var trxSubmitBtn = document.getElementById('receipt-trx-submit');
     var trxInput = document.getElementById('receipt-trx-input');

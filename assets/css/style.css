@@ -1089,6 +1089,10 @@ html:not(.js) .route[hidden] { display: block; }
 .pay-badge--rocket {
   background: #8c3494;
 }
+.pay-badge--binance {
+  background: #F0B90B;
+  color: #0c0d10;
+}
 
 /* Post-order Receipt Card */
 .order-receipt {
