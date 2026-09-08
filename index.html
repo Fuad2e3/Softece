@@ -28,7 +28,7 @@
   <meta property="og:type" content="website">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-var-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-var-latin.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=10">
+  <link rel="stylesheet" href="assets/css/style.css?v=11">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%237c5cff'/><path d='M32 36h36M32 50h24M32 64h30' stroke='white' stroke-width='9' stroke-linecap='round'/></svg>">
 </head>
@@ -2176,50 +2176,57 @@
                 </div>
 
                 <div class="field">
-                  <label>Payment preference</label>
-                  <div class="pay-methods">
-                    <label class="pay-method-opt">
+                  <label>Payment method</label>
+                  <div class="pay-method-grid">
+                    <label class="pay-chip">
                       <input type="radio" name="payment_method" value="Pay after Discussion" checked>
-                      <span class="pay-method-box">
-                        <span class="pay-method-title">💬 Pay after Discussion (Recommended)</span>
-                        <span class="pay-method-desc">Free consultation first &middot; 50% advance after scope and milestone agreement.</span>
+                      <span class="pay-chip__body">
+                        <span class="pay-chip__top">💬 <b>Discussion</b></span>
+                        <small>Pay 50% after consultation</small>
                       </span>
                     </label>
-                    <label class="pay-method-opt">
-                      <input type="radio" name="payment_method" value="bKash (01902780443)">
-                      <span class="pay-method-box">
-                        <span class="pay-method-title"><span class="pay-badge pay-badge--bkash">bKash</span> Send Money &middot; 01902780443</span>
-                        <span class="pay-method-desc">Personal / Send Money to confirm your development sprint slot immediately.</span>
+                    <label class="pay-chip">
+                      <input type="radio" name="payment_method" value="bKash">
+                      <span class="pay-chip__body">
+                        <span class="pay-chip__top"><span class="pay-badge pay-badge--bkash">bKash</span> <b>01902780443</b></span>
+                        <small>Send Money (Personal)</small>
                       </span>
                     </label>
-                    <label class="pay-method-opt">
-                      <input type="radio" name="payment_method" value="Nagad (01902780443)">
-                      <span class="pay-method-box">
-                        <span class="pay-method-title"><span class="pay-badge pay-badge--nagad">Nagad</span> Send Money &middot; 01902780443</span>
-                        <span class="pay-method-desc">Personal / Send Money to confirm your development sprint slot immediately.</span>
+                    <label class="pay-chip">
+                      <input type="radio" name="payment_method" value="Nagad">
+                      <span class="pay-chip__body">
+                        <span class="pay-chip__top"><span class="pay-badge pay-badge--nagad">Nagad</span> <b>01902780443</b></span>
+                        <small>Send Money (Personal)</small>
                       </span>
                     </label>
-                    <label class="pay-method-opt">
-                      <input type="radio" name="payment_method" value="Rocket (01902780443)">
-                      <span class="pay-method-box">
-                        <span class="pay-method-title"><span class="pay-badge pay-badge--rocket">Rocket</span> Send Money &middot; 01902780443</span>
-                        <span class="pay-method-desc">Personal / Send Money to confirm your development sprint slot immediately.</span>
+                    <label class="pay-chip">
+                      <input type="radio" name="payment_method" value="Rocket">
+                      <span class="pay-chip__body">
+                        <span class="pay-chip__top"><span class="pay-badge pay-badge--rocket">Rocket</span> <b>01902780443</b></span>
+                        <small>Send Money (Personal)</small>
                       </span>
                     </label>
-                    <label class="pay-method-opt">
-                      <input type="radio" name="payment_method" value="Binance Pay (570841564)">
-                      <span class="pay-method-box">
-                        <span class="pay-method-title"><span class="pay-badge pay-badge--binance">Binance</span> Pay ID &middot; 570841564</span>
-                        <span class="pay-method-desc">USDT / Crypto &middot; 0% fee instant payment. Ideal for international &amp; web3 clients.</span>
+                    <label class="pay-chip">
+                      <input type="radio" name="payment_method" value="Binance Pay">
+                      <span class="pay-chip__body">
+                        <span class="pay-chip__top"><span class="pay-badge pay-badge--binance">Binance</span> <b>570841564</b></span>
+                        <small>USDT Pay ID (0% fee)</small>
                       </span>
                     </label>
                   </div>
                 </div>
 
-                <div class="field" id="order-trx-field">
-                  <label for="order-trx">Transaction ID / TrxID <span class="text-muted">(optional)</span></label>
-                  <input id="order-trx" name="trx_id" type="text" placeholder="e.g. 9K82JD82 or Binance Order ID (leave blank if paying later)">
-                  <p class="field__hint">If you have already sent a 50% advance via bKash/Nagad/Rocket or Binance, enter your TrxID / Pay ID here.</p>
+                <div class="form__row" id="order-payment-details-row">
+                  <div class="field">
+                    <label for="order-sender-number">Sender Number / Account <span class="text-muted">(যেই নম্বর থেকে টাকা পাঠিয়েছেন)</span></label>
+                    <input id="order-sender-number" name="sender_number" type="text" placeholder="e.g. 01XXXXXXXXX or Binance Pay ID">
+                    <p class="field__hint">The number or ID you used to send payment (if paying now).</p>
+                  </div>
+                  <div class="field">
+                    <label for="order-trx">Transaction ID / TrxID <span class="text-muted">(optional)</span></label>
+                    <input id="order-trx" name="trx_id" type="text" placeholder="e.g. 9K82JD82 (or leave blank if paying later)">
+                    <p class="field__hint">The TrxID or Order ID from your payment slip.</p>
+                  </div>
                 </div>
 
                 <button class="btn btn--primary btn--block btn--lg" type="submit">Send order</button>
@@ -2259,6 +2266,14 @@
                     <div class="order-receipt__row">
                       <span>Payment Method:</span>
                       <span id="receipt-method">Pay after Discussion</span>
+                    </div>
+                    <div class="order-receipt__row">
+                      <span>Sender Number / ID:</span>
+                      <span id="receipt-sender">-</span>
+                    </div>
+                    <div class="order-receipt__row">
+                      <span>TrxID:</span>
+                      <span id="receipt-trx">-</span>
                     </div>
                     <div class="order-receipt__row">
                       <span>Payment Status:</span>
@@ -2302,10 +2317,11 @@
                   </div>
 
                   <div class="order-receipt__trx" id="receipt-trx-section">
-                    <label for="receipt-trx-input">Have you already sent the advance payment?</label>
+                    <label for="receipt-trx-input">Sent advance payment? Record your sender number &amp; TrxID:</label>
                     <div class="order-receipt__trx-form">
-                      <input type="text" id="receipt-trx-input" placeholder="Enter bKash/Nagad/Rocket TrxID or Binance Pay ID">
-                      <button type="button" class="btn btn--primary btn--sm" id="receipt-trx-submit">Submit TrxID</button>
+                      <input type="text" id="receipt-sender-input" placeholder="Sender No (01XXXXXXXXX)">
+                      <input type="text" id="receipt-trx-input" placeholder="TrxID / Order ID">
+                      <button type="button" class="btn btn--primary btn--sm" id="receipt-trx-submit">Submit Details</button>
                     </div>
                     <p class="field__hint" id="receipt-trx-status">Submitting will update your payment details directly in our Google Sheet.</p>
                   </div>
@@ -2464,7 +2480,7 @@
       <use href="#i-up" />
     </svg></button>
 
-  <script src="assets/js/main.js?v=19" defer></script>
+  <script src="assets/js/main.js?v=20" defer></script>
 </body>
 
 </html>

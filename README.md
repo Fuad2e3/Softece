@@ -59,9 +59,9 @@ here, so the form POSTs to a Google Apps Script web app that appends a row:
 The raw endpoint URL is kept private. The client-side form safely connects
 to the web app and appends rows directly to the dashboard.
 
-Columns: `Received`, `Package`, `Price`, `Name`, `Email`, `Phone`, `Company`, `Start`, `Details`, `Status`, `Payment Method`, `Payment Status`, `TrxID / Note`.
+Columns: `Received`, `Package`, `Price`, `Name`, `Email`, `Phone`, `Company`, `Start`, `Details`, `Status`, `Payment Method`, `Payment Status`, `Sender Number`, `TrxID / Note`.
 
-Payments workflow: Clients choose between *Pay after Discussion* (free consultation, advance after scope lock), *bKash (Send Money)*, *Nagad (Send Money)*, *Rocket (Send Money)*, or *Binance Pay (ID: 570841564)*. Upon submission, a post-order payment receipt card provides 1-click bKash/Nagad/Rocket number copying (`01902780443`), Binance Pay ID copying (`570841564`), instant WhatsApp confirmation with pre-filled order details, and late TrxID logging directly to the sheet.
+Payments workflow: Clients choose between *Pay after Discussion* (free consultation, advance after scope lock), *bKash (Send Money)*, *Nagad (Send Money)*, *Rocket (Send Money)*, or *Binance Pay (ID: 570841564)* via clean payment chips. Clients can provide their *Sender Number / Account* and *Transaction ID (TrxID)* directly during order or in the post-order receipt card. The card also provides 1-click bKash/Nagad/Rocket number copying (`01902780443`), Binance Pay ID copying (`570841564`), instant WhatsApp confirmation with pre-filled order & payment details, and late TrxID/Sender Number logging directly to the sheet.
 
 Until `data-sheet` is filled in — and if the request ever fails — the order falls back
 to the mail client too, so a filled-in form is never lost.

@@ -315,7 +315,8 @@
         if (!data.payment_method) {
           data.payment_method = 'Pay after Discussion';
         }
-        if (data.trx_id && data.trx_id.trim().length > 0) {
+        var hasPaid = (data.trx_id && data.trx_id.trim().length > 0) || (data.sender_number && data.sender_number.trim().length > 0);
+        if (hasPaid) {
           data.payment_status = 'Advance Paid';
         } else if (data.payment_method.indexOf('Discussion') !== -1) {
           data.payment_status = 'Awaiting Discussion';
@@ -340,6 +341,8 @@
         var elAdv = document.getElementById('receipt-advance');
         var elContact = document.getElementById('receipt-contact');
         var elMethod = document.getElementById('receipt-method');
+        var elSender = document.getElementById('receipt-sender');
+        var elTrx = document.getElementById('receipt-trx');
         var elStatus = document.getElementById('receipt-status');
         var elWa = document.getElementById('receipt-wa-btn');
 
@@ -358,10 +361,16 @@
           elContact.textContent = (data.name || 'Valued Client') + (data.phone ? ' · ' + data.phone : '');
         }
         if (elMethod) elMethod.textContent = data.payment_method || 'Pay after Discussion';
+        if (elSender) elSender.textContent = data.sender_number || '-';
+        if (elTrx) elTrx.textContent = data.trx_id || '-';
 
         if (elStatus) {
-          if (data.trx_id && data.trx_id.trim().length > 0) {
-            elStatus.textContent = 'Advance Submitted (Trx: ' + data.trx_id.trim() + ')';
+          var hasPaidNow = (data.trx_id && data.trx_id.trim().length > 0) || (data.sender_number && data.sender_number.trim().length > 0);
+          if (hasPaidNow) {
+            var note = 'Advance Submitted';
+            if (data.sender_number) note += ' (Sender: ' + data.sender_number.trim() + ')';
+            if (data.trx_id) note += ' (Trx: ' + data.trx_id.trim() + ')';
+            elStatus.textContent = note;
             elStatus.className = 'receipt-badge receipt-badge--paid';
           } else if ((data.payment_method || '').indexOf('Discussion') !== -1) {
             elStatus.textContent = 'Awaiting Discussion / Confirmation';
@@ -380,6 +389,7 @@
             '• Name: ' + (data.name || '') + '\n' +
             '• Phone: ' + (data.phone || '') + '\n' +
             '• Payment: ' + (data.payment_method || 'Discussion') + '\n' +
+            (data.sender_number ? ('• Sender Account: ' + data.sender_number + '\n') : '') +
             (data.trx_id ? ('• TrxID: ' + data.trx_id + '\n') : '') +
             'Please confirm and share our project timeline.';
           elWa.href = 'https://wa.me/8801902780443?text=' + encodeURIComponent(waText);
@@ -507,15 +517,17 @@
       });
     }
 
-    /* Submit Late TrxID from receipt card */
+    /* Submit Late TrxID / Sender Number from receipt card */
     var trxSubmitBtn = document.getElementById('receipt-trx-submit');
+    var senderInput = document.getElementById('receipt-sender-input');
     var trxInput = document.getElementById('receipt-trx-input');
     var trxStatus = document.getElementById('receipt-trx-status');
-    if (trxSubmitBtn && trxInput) {
+    if (trxSubmitBtn) {
       trxSubmitBtn.addEventListener('click', function () {
-        var trxVal = (trxInput.value || '').trim();
-        if (!trxVal) {
-          alert('Please enter a Transaction ID (TrxID) first.');
+        var senderVal = senderInput ? (senderInput.value || '').trim() : '';
+        var trxVal = trxInput ? (trxInput.value || '').trim() : '';
+        if (!senderVal && !trxVal) {
+          alert('Please enter your Sender Number or Transaction ID (TrxID) first.');
           return;
         }
         trxSubmitBtn.disabled = true;
@@ -534,6 +546,7 @@
 
         var payload = {
           action: 'update_trx',
+          sender_number: senderVal,
           trx_id: trxVal,
           payment_status: 'Advance Paid',
           phone: clientPhone,
@@ -545,17 +558,26 @@
           trxSubmitBtn.disabled = false;
           trxSubmitBtn.textContent = 'Saved ✓';
           if (trxStatus) {
-            trxStatus.textContent = '✓ Transaction ID (' + trxVal + ') recorded in our sprint sheet!';
+            var msg = '✓ Payment details recorded in our sprint sheet!';
+            if (senderVal) msg += ' (Sender: ' + senderVal + ')';
+            if (trxVal) msg += ' (Trx: ' + trxVal + ')';
+            trxStatus.textContent = msg;
             trxStatus.style.color = '#4ade80';
           }
           var elStatus = document.getElementById('receipt-status');
           if (elStatus) {
-            elStatus.textContent = 'Advance Paid (Trx: ' + trxVal + ')';
+            elStatus.textContent = 'Advance Paid';
             elStatus.className = 'receipt-badge receipt-badge--paid';
           }
+          var elSender = document.getElementById('receipt-sender');
+          if (elSender && senderVal) elSender.textContent = senderVal;
+          var elTrx = document.getElementById('receipt-trx');
+          if (elTrx && trxVal) elTrx.textContent = trxVal;
+
           var elWa = document.getElementById('receipt-wa-btn');
           if (elWa && lastOrderData) {
-            lastOrderData.trx_id = trxVal;
+            if (senderVal) lastOrderData.sender_number = senderVal;
+            if (trxVal) lastOrderData.trx_id = trxVal;
             var adv = '50% upon scope approval';
             var priceNum = parseInt(String(lastOrderData.price || '').replace(/[^0-9]/g, ''), 10);
             if (priceNum && !isNaN(priceNum)) {
@@ -568,7 +590,8 @@
               '• Name: ' + (lastOrderData.name || '') + '\n' +
               '• Phone: ' + (lastOrderData.phone || '') + '\n' +
               '• Payment: ' + (lastOrderData.payment_method || 'Discussion') + '\n' +
-              '• TrxID: ' + trxVal + '\n' +
+              (lastOrderData.sender_number ? ('• Sender Account: ' + lastOrderData.sender_number + '\n') : '') +
+              (lastOrderData.trx_id ? ('• TrxID: ' + lastOrderData.trx_id + '\n') : '') +
               'Please confirm and share our project timeline.';
             elWa.href = 'https://wa.me/8801902780443?text=' + encodeURIComponent(waText);
           }

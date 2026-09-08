@@ -1018,57 +1018,63 @@ html:not(.js) .route[hidden] { display: block; }
 }
 
 /* ---------- Order Payment Methods & Post-Order Receipt ---------- */
-.pay-methods {
+.pay-method-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 10px;
   margin-top: 4px;
 }
-.pay-method-opt {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface);
+.pay-chip {
+  display: block;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  position: relative;
 }
-.pay-method-opt:hover {
-  border-color: rgba(124, 92, 255, 0.4);
-  background: var(--surface-2);
-}
-.pay-method-opt:has(input:checked) {
-  border-color: var(--brand);
-  background: rgba(124, 92, 255, 0.08);
-  box-shadow: 0 0 0 1px var(--brand);
-}
-.pay-method-opt input[type="radio"] {
-  margin-top: 3px;
+.pay-chip input[type="radio"] {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  margin: 0;
   accent-color: var(--brand);
   width: 16px;
   height: 16px;
   cursor: pointer;
-  flex-shrink: 0;
 }
-.pay-method-box {
+.pay-chip__body {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+  height: 100%;
 }
-.pay-method-title {
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--text);
+.pay-chip:hover .pay-chip__body {
+  border-color: rgba(124, 92, 255, 0.4);
+  background: var(--surface-2);
+}
+.pay-chip:has(input:checked) .pay-chip__body {
+  border-color: var(--brand);
+  background: rgba(124, 92, 255, 0.09);
+  box-shadow: 0 0 0 1px var(--brand);
+}
+.pay-chip__top {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text);
 }
-.pay-method-desc {
-  font-size: 0.8rem;
+.pay-chip__top b {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.pay-chip__body small {
+  font-size: 0.76rem;
   color: var(--text-dim);
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .pay-badge {
@@ -1264,9 +1270,11 @@ html:not(.js) .route[hidden] { display: block; }
 .order-receipt__trx-form {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 .order-receipt__trx-form input {
-  flex: 1;
+  flex: 1 1 160px;
+  min-width: 140px;
   padding: 9px 12px;
   font-size: 0.88rem;
   border-radius: 10px;
