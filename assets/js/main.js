@@ -248,6 +248,7 @@
       var okBox = form.querySelector('.form__ok');
       var btn = form.querySelector('button[type="submit"]');
       var planField = form.getAttribute('data-plan-field');
+      var formInitTime = Date.now();
 
       /* Arriving from a pricing card: #order/growth fixes the package to
          Growth. The labels live on the form as data-plan-*, so the prices are
@@ -436,6 +437,45 @@
           return;
         }
         var data = collect();
+
+        /* === Anti-Bot & Spam Protection === */
+        var isOrderForm = Boolean(form.getAttribute('data-subject') === 'Order' || form.getAttribute('data-plan-field'));
+        var isHoneypotTrap = Boolean(data.website_url && data.website_url.trim().length > 0);
+        var elapsed = Date.now() - formInitTime;
+        var isBotSpeed = elapsed < 1800; // Humans cannot read & complete form under 1.8 seconds
+
+        // If detected as bot, silently simulate success to neutralize the bot without touching Google Sheet
+        if (isHoneypotTrap || isBotSpeed) {
+          busy(true);
+          setTimeout(function () {
+            busy(false);
+            if (btn) {
+              btn.textContent = isOrderForm ? 'Order Submitted ✓' : 'Sent ✓';
+              btn.disabled = true;
+            }
+            done(isOrderForm ? null : 'Thanks — your message is in. We’ll reply within one business day.', data);
+          }, 600);
+          return;
+        }
+
+        // Rate Limiting (Prevent spam flooding: 1 submission every 15s per browser)
+        var cooldownKey = isOrderForm ? 'softece_order_throttle' : 'softece_contact_throttle';
+        var lastSub = 0;
+        try {
+          lastSub = parseInt(sessionStorage.getItem(cooldownKey) || '0', 10);
+        } catch (_) {}
+        var now = Date.now();
+        if (lastSub && (now - lastSub < 15000)) {
+          var remaining = Math.ceil((15000 - (now - lastSub)) / 1000);
+          alert('Please wait ' + remaining + ' seconds before submitting again.');
+          return;
+        }
+        try {
+          sessionStorage.setItem(cooldownKey, String(now));
+        } catch (_) {}
+
+        // Remove trap field from payload before sending
+        delete data.website_url;
 
         if (endpoint && window.fetch) {
           busy(true);

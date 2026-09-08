@@ -28,7 +28,7 @@
   <meta property="og:type" content="website">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-var-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-var-latin.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=11">
+  <link rel="stylesheet" href="assets/css/style.css?v=12">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%237c5cff'/><path d='M32 36h36M32 50h24M32 64h30' stroke='white' stroke-width='9' stroke-linecap='round'/></svg>">
 </head>
@@ -1956,6 +1956,12 @@
                     required></textarea>
                 </div>
 
+                <!-- Anti-bot honeypot field (hidden from users, filled by bots) -->
+                <div class="hp-wrap" aria-hidden="true">
+                  <label for="contact-website-field">Leave this empty</label>
+                  <input id="contact-website-field" name="website_url" type="text" tabindex="-1" autocomplete="off">
+                </div>
+
                 <button class="btn btn--primary btn--block btn--lg" type="submit">Send message</button>
                 <div class="form__ok">Your email app should be opening with everything filled in &mdash; press send
                   there and we&rsquo;ll reply within one business day.</div>
@@ -2229,6 +2235,12 @@
                   </div>
                 </div>
 
+                <!-- Anti-bot honeypot field (hidden from users, filled by bots) -->
+                <div class="hp-wrap" aria-hidden="true">
+                  <label for="order-website-field">Leave this empty</label>
+                  <input id="order-website-field" name="website_url" type="text" tabindex="-1" autocomplete="off">
+                </div>
+
                 <button class="btn btn--primary btn--block btn--lg" type="submit">Send order</button>
                 <div class="form__ok">Thanks &mdash; your order is in. We&rsquo;ll reply within one business day.</div>
 
@@ -2480,7 +2492,7 @@
       <use href="#i-up" />
     </svg></button>
 
-  <script src="assets/js/main.js?v=21" defer></script>
+  <script src="assets/js/main.js?v=22" defer></script>
 </body>
 
 </html>

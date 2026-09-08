@@ -635,6 +635,17 @@ img.avatar { object-fit: cover; display: block; }
 .field input::placeholder, .field textarea::placeholder { color: var(--text-dim); }
 /* .field sets display:grid, which would beat the [hidden] attribute. */
 .field[hidden] { display: none; }
+/* Honeypot trap: hidden from human view & assistive tech, filled by automated spam bots */
+.hp-wrap {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
 /* Routing: one section is shown at a time, but only where scripting can put
    them back. Without JS every section stays visible and the page reads as one
    long document rather than a blank screen. */
