@@ -287,11 +287,17 @@
         });
       }
 
+      var lastOrderData = null;
+
       var collect = function () {
         var data = {};
         Array.prototype.forEach.call(form.elements, function (el) {
           if (el.name && el.type !== 'submit' && el.type !== 'button') {
-            data[el.name] = (el.value || '').trim();
+            if (el.type === 'radio') {
+              if (el.checked) data[el.name] = el.value;
+            } else {
+              data[el.name] = (el.value || '').trim();
+            }
           }
         });
         // Ensure price is always filled in for the Google Sheet
@@ -305,6 +311,18 @@
             data.price = '৳3,000';
           }
         }
+        // Payment defaults & status
+        if (!data.payment_method) {
+          data.payment_method = 'Pay after Discussion';
+        }
+        if (data.trx_id && data.trx_id.trim().length > 0) {
+          data.payment_status = 'Advance Paid';
+        } else if (data.payment_method.indexOf('Discussion') !== -1) {
+          data.payment_status = 'Awaiting Discussion';
+        } else {
+          data.payment_status = 'Pending Advance';
+        }
+        lastOrderData = data;
         return data;
       };
       var busy = function (on) {
@@ -312,7 +330,73 @@
         btn.disabled = on;
         btn.textContent = on ? 'Sending...' : btn.getAttribute('data-label');
       };
-      var done = function (message) {
+      var showOrderReceipt = function (data) {
+        var receipt = document.getElementById('order-receipt');
+        if (!receipt) return;
+        receipt.hidden = false;
+
+        var elPkg = document.getElementById('receipt-package');
+        var elPrice = document.getElementById('receipt-price');
+        var elAdv = document.getElementById('receipt-advance');
+        var elContact = document.getElementById('receipt-contact');
+        var elMethod = document.getElementById('receipt-method');
+        var elStatus = document.getElementById('receipt-status');
+        var elWa = document.getElementById('receipt-wa-btn');
+
+        if (elPkg) elPkg.textContent = data.package || 'Launch — ৳3,000 / project';
+        if (elPrice) elPrice.textContent = data.price || '৳3,000';
+
+        // Calculate 50% advance
+        var adv = '50% upon scope approval';
+        var priceNum = parseInt(String(data.price || '').replace(/[^0-9]/g, ''), 10);
+        if (priceNum && !isNaN(priceNum)) {
+          adv = '৳' + Math.round(priceNum / 2).toLocaleString();
+        }
+        if (elAdv) elAdv.textContent = adv;
+
+        if (elContact) {
+          elContact.textContent = (data.name || 'Valued Client') + (data.phone ? ' · ' + data.phone : '');
+        }
+        if (elMethod) elMethod.textContent = data.payment_method || 'Pay after Discussion';
+
+        if (elStatus) {
+          if (data.trx_id && data.trx_id.trim().length > 0) {
+            elStatus.textContent = 'Advance Submitted (Trx: ' + data.trx_id.trim() + ')';
+            elStatus.className = 'receipt-badge receipt-badge--paid';
+          } else if ((data.payment_method || '').indexOf('Discussion') !== -1) {
+            elStatus.textContent = 'Awaiting Discussion / Confirmation';
+            elStatus.className = 'receipt-badge receipt-badge--pending';
+          } else {
+            elStatus.textContent = 'Pending 50% Advance (' + adv + ')';
+            elStatus.className = 'receipt-badge receipt-badge--pending';
+          }
+        }
+
+        if (elWa) {
+          var waText = 'Hi Fuad, I have submitted an order on Softece:\n' +
+            '• Package: ' + (data.package || '') + '\n' +
+            '• Price: ' + (data.price || '') + '\n' +
+            '• Advance (50%): ' + adv + '\n' +
+            '• Name: ' + (data.name || '') + '\n' +
+            '• Phone: ' + (data.phone || '') + '\n' +
+            '• Payment: ' + (data.payment_method || 'Discussion') + '\n' +
+            (data.trx_id ? ('• TrxID: ' + data.trx_id + '\n') : '') +
+            'Please confirm and share our project timeline.';
+          elWa.href = 'https://wa.me/8801902780443?text=' + encodeURIComponent(waText);
+        }
+
+        if (okBox) okBox.style.display = 'none';
+
+        try {
+          receipt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } catch (_) {}
+      };
+
+      var done = function (message, data) {
+        if (data && document.getElementById('order-receipt')) {
+          showOrderReceipt(data);
+          return;
+        }
         if (!okBox) return;
         if (message) okBox.textContent = message;
         okBox.classList.add('is-shown');
@@ -326,7 +410,7 @@
           }
         }
         lines.push('', data.message || data.details || '');
-        done('Your email app should be opening with everything filled in \u2014 press send there.');
+        done('Your email app should be opening with everything filled in \u2014 press send there.', data);
         window.location.href = 'mailto:' + mailTo +
           '?subject=' + encodeURIComponent(
             (form.getAttribute('data-subject') || 'Project enquiry') + ' from ' + (data.name || 'the Softece site')) +
@@ -352,15 +436,22 @@
             body: JSON.stringify(data)
           }).then(function () {
             busy(false);
-            done(null);
-            form.reset();
+            done(null, data);
+            if (!document.getElementById('order-receipt')) {
+              form.reset();
+            } else if (btn) {
+              btn.textContent = 'Order Submitted ✓';
+              btn.disabled = true;
+            }
           })['catch'](function () {
             busy(false);
             if (mailTo) {
               handToMailClient(data);
             } else {
-              done('Thanks — your order is in. We\u2019ll reply within one business day.');
-              form.reset();
+              done('Thanks — your order is in. We\u2019ll reply within one business day.', data);
+              if (!document.getElementById('order-receipt')) {
+                form.reset();
+              }
             }
           });
           return;
@@ -371,6 +462,85 @@
         }
       });
     });
+
+    /* Copy bKash/Nagad Number */
+    var copyBtn = document.getElementById('btn-copy-number');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        var num = '01902780443';
+        var copyText = document.getElementById('copy-btn-text');
+        var handleSuccess = function () {
+          if (copyText) copyText.textContent = 'Copied!';
+          setTimeout(function () {
+            if (copyText) copyText.textContent = 'Copy Number';
+          }, 2500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(num).then(handleSuccess)['catch'](function () {
+            window.prompt('Copy bKash/Nagad Number:', num);
+          });
+        } else {
+          window.prompt('Copy bKash/Nagad Number:', num);
+        }
+      });
+    }
+
+    /* Submit Late TrxID from receipt card */
+    var trxSubmitBtn = document.getElementById('receipt-trx-submit');
+    var trxInput = document.getElementById('receipt-trx-input');
+    var trxStatus = document.getElementById('receipt-trx-status');
+    if (trxSubmitBtn && trxInput) {
+      trxSubmitBtn.addEventListener('click', function () {
+        var trxVal = (trxInput.value || '').trim();
+        if (!trxVal) {
+          alert('Please enter a Transaction ID (TrxID) first.');
+          return;
+        }
+        trxSubmitBtn.disabled = true;
+        trxSubmitBtn.textContent = 'Saving...';
+
+        var endpoint = '';
+        try {
+          endpoint = atob('aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy8=') +
+                     atob('QUtmeWNieXFDR19QbmtsRkM4Z1V1RDQwZmxGOVB4V20wd3pyT1ZjYkFxalNnWHZRdWV4eTFWNG1OdTBZZzdnVVhWZE96ZXA0') +
+                     atob('L2V4ZWM=');
+        } catch (_) {}
+
+        var payload = {
+          action: 'update_trx',
+          trx_id: trxVal,
+          payment_status: 'Advance Paid',
+          phone: document.getElementById('order-phone') ? document.getElementById('order-phone').value : '',
+          email: document.getElementById('order-email') ? document.getElementById('order-email').value : '',
+          name: document.getElementById('order-name') ? document.getElementById('order-name').value : ''
+        };
+
+        var onDone = function () {
+          trxSubmitBtn.disabled = false;
+          trxSubmitBtn.textContent = 'Saved ✓';
+          if (trxStatus) {
+            trxStatus.textContent = '✓ Transaction ID (' + trxVal + ') recorded in our sprint sheet!';
+            trxStatus.style.color = '#4ade80';
+          }
+          var elStatus = document.getElementById('receipt-status');
+          if (elStatus) {
+            elStatus.textContent = 'Advance Paid (Trx: ' + trxVal + ')';
+            elStatus.className = 'receipt-badge receipt-badge--paid';
+          }
+        };
+
+        if (endpoint && window.fetch) {
+          fetch(endpoint, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          }).then(onDone)['catch'](onDone);
+        } else {
+          onDone();
+        }
+      });
+    }
 
     /* ---------- Routing ----------
        The whole site is one document: six <section class="route"> blocks, one

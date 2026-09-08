@@ -28,7 +28,7 @@
   <meta property="og:type" content="website">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-var-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-var-latin.woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=9">
+  <link rel="stylesheet" href="assets/css/style.css?v=10">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%237c5cff'/><path d='M32 36h36M32 50h24M32 64h30' stroke='white' stroke-width='9' stroke-linecap='round'/></svg>">
 </head>
@@ -2175,8 +2175,124 @@
                     required></textarea>
                 </div>
 
+                <div class="field">
+                  <label>Payment preference</label>
+                  <div class="pay-methods">
+                    <label class="pay-method-opt">
+                      <input type="radio" name="payment_method" value="Pay after Discussion" checked>
+                      <span class="pay-method-box">
+                        <span class="pay-method-title">💬 Pay after Discussion (Recommended)</span>
+                        <span class="pay-method-desc">Free consultation first &middot; 50% advance after scope and milestone agreement.</span>
+                      </span>
+                    </label>
+                    <label class="pay-method-opt">
+                      <input type="radio" name="payment_method" value="bKash (01902780443)">
+                      <span class="pay-method-box">
+                        <span class="pay-method-title"><span class="pay-badge pay-badge--bkash">bKash</span> Send Money &middot; 01902780443</span>
+                        <span class="pay-method-desc">Personal / Send Money to confirm your development sprint slot immediately.</span>
+                      </span>
+                    </label>
+                    <label class="pay-method-opt">
+                      <input type="radio" name="payment_method" value="Nagad (01902780443)">
+                      <span class="pay-method-box">
+                        <span class="pay-method-title"><span class="pay-badge pay-badge--nagad">Nagad</span> Send Money &middot; 01902780443</span>
+                        <span class="pay-method-desc">Personal / Send Money to confirm your development sprint slot immediately.</span>
+                      </span>
+                    </label>
+                    <label class="pay-method-opt">
+                      <input type="radio" name="payment_method" value="Bank Transfer">
+                      <span class="pay-method-box">
+                        <span class="pay-method-title">🏦 Bank Wire / Transfer</span>
+                        <span class="pay-method-desc">Direct corporate account invoice details sent upon order review.</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="field" id="order-trx-field">
+                  <label for="order-trx">Transaction ID / TrxID <span class="text-muted">(optional)</span></label>
+                  <input id="order-trx" name="trx_id" type="text" placeholder="e.g. 9K82JD82 (leave blank if paying later)">
+                  <p class="field__hint">If you have already sent a 50% advance via bKash/Nagad, enter your TrxID here.</p>
+                </div>
+
                 <button class="btn btn--primary btn--block btn--lg" type="submit">Send order</button>
                 <div class="form__ok">Thanks &mdash; your order is in. We&rsquo;ll reply within one business day.</div>
+
+                <!-- Rich Post-Order Payment & Confirmation Receipt -->
+                <div class="order-receipt" id="order-receipt" hidden>
+                  <div class="order-receipt__header">
+                    <div class="order-receipt__icon">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="order-receipt__title">Order Received Successfully!</h3>
+                      <p class="order-receipt__sub">We have registered your project order. Details are saved to our sprint tracker.</p>
+                    </div>
+                  </div>
+
+                  <div class="order-receipt__summary">
+                    <div class="order-receipt__row">
+                      <span>Selected Package:</span>
+                      <b id="receipt-package">Launch &mdash; ৳3,000 / project</b>
+                    </div>
+                    <div class="order-receipt__row">
+                      <span>Total Project Fee:</span>
+                      <b id="receipt-price" class="text-brand">৳3,000</b>
+                    </div>
+                    <div class="order-receipt__row">
+                      <span>50% Sprint Advance:</span>
+                      <b id="receipt-advance" class="text-accent">৳1,500</b>
+                    </div>
+                    <div class="order-receipt__row">
+                      <span>Client Contact:</span>
+                      <span id="receipt-contact">Client</span>
+                    </div>
+                    <div class="order-receipt__row">
+                      <span>Payment Method:</span>
+                      <span id="receipt-method">Pay after Discussion</span>
+                    </div>
+                    <div class="order-receipt__row">
+                      <span>Payment Status:</span>
+                      <span id="receipt-status" class="receipt-badge receipt-badge--pending">Awaiting Discussion / Confirmation</span>
+                    </div>
+                  </div>
+
+                  <div class="order-receipt__paybox" id="receipt-paybox">
+                    <h4>Payment Details (bKash &amp; Nagad Personal)</h4>
+                    <p class="order-receipt__desc">To initiate immediate architecture &amp; development, send 50% advance to our verified number:</p>
+                    <div class="copy-box">
+                      <div class="copy-box__num">
+                        <span class="copy-box__tag">Personal</span>
+                        <code>01902780443</code>
+                      </div>
+                      <button type="button" class="btn btn--sm btn--outline" id="btn-copy-number">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span id="copy-btn-text">Copy Number</span>
+                      </button>
+                    </div>
+
+                    <div class="order-receipt__actions">
+                      <a id="receipt-wa-btn" href="https://wa.me/8801902780443" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp btn--block">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.771.815 2.796.815 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.767-5.768-5.767zm7.556 5.766c-.002 4.168-3.39 7.556-7.556 7.556-1.332 0-2.593-.349-3.693-.956l-4.108 1.077 1.097-4.009c-.663-1.15-1.026-2.464-1.026-3.668.002-4.168 3.391-7.556 7.557-7.556 4.166 0 7.554 3.388 7.555 7.556z"/>
+                        </svg>
+                        <span>Confirm &amp; Send Proof via WhatsApp</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="order-receipt__trx" id="receipt-trx-section">
+                    <label for="receipt-trx-input">Have you already sent the advance payment?</label>
+                    <div class="order-receipt__trx-form">
+                      <input type="text" id="receipt-trx-input" placeholder="Enter bKash/Nagad Transaction ID (TrxID)">
+                      <button type="button" class="btn btn--primary btn--sm" id="receipt-trx-submit">Submit TrxID</button>
+                    </div>
+                    <p class="field__hint" id="receipt-trx-status">Submitting will update your payment details directly in our Google Sheet.</p>
+                  </div>
+                </div>
+
                 <p class="form__note">Sending costs nothing and commits you to nothing. Rather talk first? Write to <a
                     href="mailto:fuadkalaroa2002@gmail.com">fuadkalaroa2002@gmail.com</a> or call <a
                     href="tel:+8801902780443">+880 1902 780443</a>.</p>
@@ -2194,18 +2310,18 @@
               <div class="panel__row"><i><svg>
                     <use href="#i-mail" />
                   </svg></i>
-                <div><b>1. You send this form</b><small>Package, contact details and what you need built</small></div>
+                <div><b>1. You send this form</b><small>Package, payment preference and scope details</small></div>
               </div>
               <div class="panel__row"><i><svg>
                     <use href="#i-clock" />
                   </svg></i>
-                <div><b>2. We reply within one business day</b><small>Scope, timeline and the price in writing</small>
+                <div><b>2. Quick consultation &amp; review</b><small>Scope, timeline and advance confirmation</small>
                 </div>
               </div>
               <div class="panel__row"><i><svg>
                     <use href="#i-check" />
                   </svg></i>
-                <div><b>3. You approve, work starts</b><small>Nothing is charged before you say yes</small></div>
+                <div><b>3. Sprint starts</b><small>Architecture, design, and live deployment delivery</small></div>
               </div>
             </div>
 
@@ -2330,7 +2446,7 @@
       <use href="#i-up" />
     </svg></button>
 
-  <script src="assets/js/main.js?v=17" defer></script>
+  <script src="assets/js/main.js?v=18" defer></script>
 </body>
 
 </html>

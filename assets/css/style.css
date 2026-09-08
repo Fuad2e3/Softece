@@ -1017,3 +1017,258 @@ html:not(.js) .route[hidden] { display: block; }
   .wa-widget { display: none !important; }
 }
 
+/* ---------- Order Payment Methods & Post-Order Receipt ---------- */
+.pay-methods {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+.pay-method-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.pay-method-opt:hover {
+  border-color: rgba(124, 92, 255, 0.4);
+  background: var(--surface-2);
+}
+.pay-method-opt:has(input:checked) {
+  border-color: var(--brand);
+  background: rgba(124, 92, 255, 0.08);
+  box-shadow: 0 0 0 1px var(--brand);
+}
+.pay-method-opt input[type="radio"] {
+  margin-top: 3px;
+  accent-color: var(--brand);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pay-method-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pay-method-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.pay-method-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.35;
+}
+
+.pay-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+.pay-badge--bkash {
+  background: #e2136e;
+}
+.pay-badge--nagad {
+  background: #f7941d;
+}
+
+/* Post-order Receipt Card */
+.order-receipt {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(40, 200, 64, 0.4);
+  background: linear-gradient(170deg, rgba(40, 200, 64, 0.08) 0%, rgba(18, 22, 34, 0.85) 100%);
+  animation: rise 0.45s var(--ease);
+  margin-top: 10px;
+}
+.order-receipt[hidden] {
+  display: none !important;
+}
+
+.order-receipt__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.order-receipt__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(40, 200, 64, 0.18);
+  border: 1px solid rgba(40, 200, 64, 0.4);
+  color: #4ade80;
+  flex-shrink: 0;
+}
+.order-receipt__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+.order-receipt__sub {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.order-receipt__summary {
+  display: grid;
+  gap: 9px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.88rem;
+}
+.order-receipt__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.order-receipt__row span:first-child {
+  color: var(--text-dim);
+}
+.order-receipt__row b,
+.order-receipt__row span:last-child {
+  font-weight: 600;
+}
+
+.receipt-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+.receipt-badge--pending {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+.receipt-badge--paid {
+  background: rgba(40, 200, 64, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(40, 200, 64, 0.3);
+}
+
+.order-receipt__paybox {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 12px;
+}
+.order-receipt__paybox h4 {
+  font-size: 0.94rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+.order-receipt__desc {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.copy-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px dashed rgba(124, 92, 255, 0.4);
+  border-radius: 10px;
+}
+.copy-box__num {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.copy-box__tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+}
+.copy-box code {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #4ade80;
+  letter-spacing: 0.04em;
+  font-family: monospace;
+}
+
+.btn--whatsapp {
+  background: #25D366;
+  color: #ffffff !important;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.35);
+  transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.btn--whatsapp:hover {
+  background: #1ebe5d;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
+}
+
+.order-receipt__trx {
+  display: grid;
+  gap: 8px;
+  padding-top: 6px;
+}
+.order-receipt__trx label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.order-receipt__trx-form {
+  display: flex;
+  gap: 8px;
+}
+.order-receipt__trx-form input {
+  flex: 1;
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+}
+.order-receipt__trx-form input:focus {
+  border-color: var(--brand);
+}
+
