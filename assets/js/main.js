@@ -220,6 +220,8 @@
       });
     }
 
+    var lastOrderData = null;
+
     /* Enquiry and order forms. The site is static, so there is no backend of
        our own: a form with data-sheet POSTs to a Google Apps Script web app
        that appends a row to the sheet. Without
@@ -286,8 +288,6 @@
           updatePlanAndPrice(plan || 'launch');
         });
       }
-
-      var lastOrderData = null;
 
       var collect = function () {
         var data = {};
@@ -528,13 +528,17 @@
                      atob('L2V4ZWM=');
         } catch (_) {}
 
+        var clientPhone = (lastOrderData && lastOrderData.phone) || (document.getElementById('order-phone') ? document.getElementById('order-phone').value : '');
+        var clientEmail = (lastOrderData && lastOrderData.email) || (document.getElementById('order-email') ? document.getElementById('order-email').value : '');
+        var clientName = (lastOrderData && lastOrderData.name) || (document.getElementById('order-name') ? document.getElementById('order-name').value : '');
+
         var payload = {
           action: 'update_trx',
           trx_id: trxVal,
           payment_status: 'Advance Paid',
-          phone: document.getElementById('order-phone') ? document.getElementById('order-phone').value : '',
-          email: document.getElementById('order-email') ? document.getElementById('order-email').value : '',
-          name: document.getElementById('order-name') ? document.getElementById('order-name').value : ''
+          phone: clientPhone,
+          email: clientEmail,
+          name: clientName
         };
 
         var onDone = function () {
@@ -548,6 +552,25 @@
           if (elStatus) {
             elStatus.textContent = 'Advance Paid (Trx: ' + trxVal + ')';
             elStatus.className = 'receipt-badge receipt-badge--paid';
+          }
+          var elWa = document.getElementById('receipt-wa-btn');
+          if (elWa && lastOrderData) {
+            lastOrderData.trx_id = trxVal;
+            var adv = '50% upon scope approval';
+            var priceNum = parseInt(String(lastOrderData.price || '').replace(/[^0-9]/g, ''), 10);
+            if (priceNum && !isNaN(priceNum)) {
+              adv = '৳' + Math.round(priceNum / 2).toLocaleString();
+            }
+            var waText = 'Hi Fuad, I have submitted an order on Softece:\n' +
+              '• Package: ' + (lastOrderData.package || '') + '\n' +
+              '• Price: ' + (lastOrderData.price || '') + '\n' +
+              '• Advance (50%): ' + adv + '\n' +
+              '• Name: ' + (lastOrderData.name || '') + '\n' +
+              '• Phone: ' + (lastOrderData.phone || '') + '\n' +
+              '• Payment: ' + (lastOrderData.payment_method || 'Discussion') + '\n' +
+              '• TrxID: ' + trxVal + '\n' +
+              'Please confirm and share our project timeline.';
+            elWa.href = 'https://wa.me/8801902780443?text=' + encodeURIComponent(waText);
           }
         };
 
