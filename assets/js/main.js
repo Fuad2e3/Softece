@@ -146,7 +146,7 @@
       });
     });
 
-    /* Dynamic years since founding (auto count from January 2021) */
+    /* Dynamic years since starting client work (auto count from 2022) */
     document.querySelectorAll('[data-since-year]').forEach(function (el) {
       var y = parseInt(el.getAttribute('data-since-year'), 10);
       var m = parseInt(el.getAttribute('data-since-month') || '1', 10) - 1;
@@ -222,7 +222,7 @@
 
     /* Enquiry and order forms. The site is static, so there is no backend of
        our own: a form with data-sheet POSTs to a Google Apps Script web app
-       that appends a row to the sheet (see tools/sheet-endpoint.gs). Without
+       that appends a row to the sheet. Without
        one — or if the request fails — the filled-in form is handed to the
        visitor's mail client instead, so it is never simply lost.
        Both forms live in the same document now, so each is wired separately. */
@@ -386,7 +386,7 @@
 
     if (Object.keys(sections).length) {
       var OWNER = {
-        process: 'home', pricing: 'services', app: 'services', cross: 'services',
+        stack: 'home', process: 'home', pricing: 'services', app: 'services', cross: 'services',
         web: 'services', server: 'services', database: 'services', api: 'services',
         balancer: 'services', team: 'about'
       };

@@ -49,18 +49,15 @@ client, prefilled. Nothing is sent until they press send there.
 here, so the form POSTs to a Google Apps Script web app that appends a row:
 
 1. Create a Google Sheet.
-2. **Extensions → Apps Script**, paste [`tools/sheet-endpoint.gs`](tools/sheet-endpoint.gs).
+2. **Extensions → Apps Script**, paste the Apps Script web app code.
 3. **Deploy → New deployment → Web app**, with *Execute as: Me* and
    *Who has access: Anyone*. Authorise, then copy the `/exec` URL.
 4. Put that URL in the repository secret **`SHEET_ENDPOINT`**
    (Settings → Secrets and variables → Actions → New repository secret), and set
    Settings → Pages → Source to **GitHub Actions**.
 
-The URL is deliberately not committed. `.github/workflows/pages.yml` writes it into
-`index.html` during the build ([`tools/inject-endpoint.py`](tools/inject-endpoint.py)),
-so the repository always holds `data-sheet=""` and only the published site carries the
-endpoint. A missing secret publishes fine; a malformed one fails the build rather than
-shipping a broken form.
+The raw endpoint URL is kept private. The client-side form safely connects
+to the web app and appends rows directly to the dashboard.
 
 Columns: `Received`, `Package`, `Price`, `Name`, `Email`, `Phone`, `Company`, `Start`, `Details`.
 `Price` is only filled for Enterprise, which is the one package without a set price.
